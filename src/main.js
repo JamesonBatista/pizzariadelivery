@@ -1,10 +1,13 @@
 import { appConfig } from "./config/appConfig.js";
 import { createPizzariaRepository } from "./repositories/pizzariaRepository.js";
 import { createDatabaseService } from "./services/databaseService.js";
+import { calculateCartTotals } from "./services/pricingService.js";
 import { registerPwaServiceWorker } from "./services/pwaService.js";
+import { createCartDrawer } from "./ui/cartDrawer.js";
 import { createCartSummary } from "./ui/cartSummary.js";
 import { createItemSheet } from "./ui/itemSheet.js";
 import { createMenuView } from "./ui/menuView.js";
+import { createPaymentSheet } from "./ui/paymentSheet.js";
 import { createSplashController } from "./ui/splashController.js";
 import { createToast } from "./ui/toast.js";
 
@@ -33,6 +36,23 @@ const elements = {
     extraFillingPrice: document.querySelector("#extra-filling-price"),
     itemTotal: document.querySelector("#sheet-item-total"),
     notes: document.querySelector("#item-notes")
+  },
+  cartDrawer: {
+    backdrop: document.querySelector("#cart-drawer-backdrop"),
+    backButton: document.querySelector("#cart-back"),
+    empty: document.querySelector("#cart-empty"),
+    items: document.querySelector("#cart-items"),
+    subtotal: document.querySelector("#cart-subtotal"),
+    deliveryFee: document.querySelector("#cart-delivery-fee"),
+    grandTotal: document.querySelector("#cart-grand-total"),
+    checkoutButton: document.querySelector("#checkout-button")
+  },
+  paymentSheet: {
+    backdrop: document.querySelector("#payment-sheet-backdrop"),
+    closeButton: document.querySelector("#payment-close"),
+    form: document.querySelector("#payment-form"),
+    cashChangeField: document.querySelector("#cash-change-field"),
+    cashChange: document.querySelector("#cash-change")
   }
 };
 
@@ -40,7 +60,7 @@ const state = {
   categorias: [],
   produtos: [],
   categoriaAtiva: appConfig.defaultCategoryId,
-  carrinhoQuantidade: 0
+  carrinhoItens: []
 };
 
 const splash = createSplashController({
@@ -56,6 +76,22 @@ const cartSummary = createCartSummary({
 });
 
 registerPwaServiceWorker();
+
+function contarItensCarrinho() {
+  return state.carrinhoItens.reduce((total, item) => total + item.quantidade, 0);
+}
+
+function obterTotaisCarrinho() {
+  return calculateCartTotals({
+    items: state.carrinhoItens,
+    deliveryFee: appConfig.pricing.deliveryFee
+  });
+}
+
+function renderCart() {
+  cartSummary.render(contarItensCarrinho());
+  cartDrawer.render(state.carrinhoItens, obterTotaisCarrinho());
+}
 
 function filtrarProdutos() {
   if (state.categoriaAtiva === appConfig.defaultCategoryId) {
@@ -84,9 +120,11 @@ const itemSheet = createItemSheet({
   pricing: appConfig.pricing,
   async onSubmit(itemPedido) {
     try {
-      await splash.run("Adicionando item ao pedido...", () => repository.criarItemPedido(itemPedido));
-      state.carrinhoQuantidade += itemPedido.quantidade;
-      cartSummary.render(state.carrinhoQuantidade);
+      const savedItem = await splash.run("Adicionando item ao pedido...", () =>
+        repository.criarItemPedido(itemPedido)
+      );
+      state.carrinhoItens.push(savedItem);
+      renderCart();
       toast.show("Item adicionado ao pedido.");
     } catch (error) {
       toast.show(error.message || "Nao foi possivel adicionar o item.");
@@ -95,10 +133,78 @@ const itemSheet = createItemSheet({
   }
 });
 
+const paymentSheet = createPaymentSheet({
+  elements: elements.paymentSheet,
+  async onSubmit(payment) {
+    toast.show(
+      payment.metodo === "dinheiro"
+        ? `Pagamento em dinheiro selecionado. Troco para ${payment.trocoPara}.`
+        : "Forma de pagamento selecionada."
+    );
+  }
+});
+
+const cartDrawer = createCartDrawer({
+  elements: elements.cartDrawer,
+  onBack() {},
+  onCheckout() {
+    if (state.carrinhoItens.length === 0) {
+      toast.show("Adicione um item antes de efetuar o pedido.");
+      return;
+    }
+
+    paymentSheet.open();
+  },
+  onIncreaseItem(itemId) {
+    state.carrinhoItens = state.carrinhoItens.map((item) =>
+      item.id === itemId
+        ? {
+            ...item,
+            quantidade: item.quantidade + 1,
+            total: item.precoUnitario * (item.quantidade + 1)
+          }
+        : item
+    );
+    renderCart();
+  },
+  onDecreaseItem(itemId, { shouldDelete }) {
+    if (shouldDelete) {
+      return;
+    }
+
+    state.carrinhoItens = state.carrinhoItens.map((item) =>
+      item.id === itemId && item.quantidade > 1
+        ? {
+            ...item,
+            quantidade: item.quantidade - 1,
+            total: item.precoUnitario * (item.quantidade - 1)
+          }
+        : item
+    );
+    renderCart();
+  },
+  async onDeleteItem(itemId) {
+    try {
+      await splash.run("Removendo item do pedido...", () => repository.removerItemPedido(itemId));
+      state.carrinhoItens = state.carrinhoItens.filter((item) => item.id !== itemId);
+      renderCart();
+      toast.show("Item removido do carrinho.");
+    } catch (error) {
+      toast.show(error.message || "Nao foi possivel remover o item.");
+    }
+  }
+});
+
+elements.cartButton.addEventListener("click", () => {
+  renderCart();
+  cartDrawer.open();
+});
+
 function renderApp() {
   menuView.renderCategories(state.categorias);
   menuView.setActiveCategory(state.categoriaAtiva);
   menuView.renderProducts(filtrarProdutos());
+  renderCart();
   elements.appShell.hidden = false;
 }
 

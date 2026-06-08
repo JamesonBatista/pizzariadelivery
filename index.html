@@ -17,6 +17,14 @@
   </head>
   <body>
     <section id="splash-screen" class="splash" aria-live="polite" aria-busy="true">
+      <div class="splash-rain" aria-hidden="true">
+        <span class="splash-rain__item splash-rain__item--whole">🍕</span>
+        <span class="splash-rain__item splash-rain__item--slice">🍕</span>
+        <span class="splash-rain__item splash-rain__item--whole">🍕</span>
+        <span class="splash-rain__item splash-rain__item--slice">🍕</span>
+        <span class="splash-rain__item splash-rain__item--whole">🍕</span>
+        <span class="splash-rain__item splash-rain__item--slice">🍕</span>
+      </div>
       <div class="splash__content">
         <div class="splash__brand" aria-hidden="true">🍕</div>
         <p class="splash__eyebrow">Pizzaria</p>
@@ -129,6 +137,102 @@
           </div>
 
           <button class="button button--full" type="submit">Adicionar ao pedido</button>
+        </form>
+      </section>
+    </div>
+
+    <div id="cart-drawer-backdrop" class="screen-backdrop" hidden>
+      <section
+        class="cart-screen"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cart-title"
+      >
+        <header class="screen-header">
+          <button id="cart-back" class="screen-back" type="button">Voltar</button>
+          <div>
+            <p class="screen-header__eyebrow">Seu pedido</p>
+            <h2 id="cart-title">Carrinho</h2>
+          </div>
+        </header>
+
+        <div id="cart-empty" class="cart-empty">
+          <strong>Seu carrinho esta vazio.</strong>
+          <span>Volte ao cardapio e adicione seus sabores favoritos.</span>
+        </div>
+
+        <div id="cart-items" class="cart-items" aria-live="polite"></div>
+
+        <footer class="cart-footer">
+          <div class="cart-totals">
+            <div>
+              <span>Subtotal</span>
+              <strong id="cart-subtotal"></strong>
+            </div>
+            <div>
+              <span>Taxa de entrega</span>
+              <strong id="cart-delivery-fee"></strong>
+            </div>
+            <div class="cart-totals__grand">
+              <span>Total</span>
+              <strong id="cart-grand-total"></strong>
+            </div>
+          </div>
+          <button id="checkout-button" class="button button--full" type="button">
+            Efetuar pedido
+          </button>
+        </footer>
+      </section>
+    </div>
+
+    <div id="payment-sheet-backdrop" class="sheet-backdrop" hidden>
+      <section
+        class="sheet payment-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="payment-title"
+      >
+        <div class="sheet__handle" aria-hidden="true"></div>
+        <button id="payment-close" class="sheet__close" type="button" aria-label="Fechar">
+          &times;
+        </button>
+
+        <p class="sheet__category">Pagamento obrigatorio</p>
+        <h2 id="payment-title">Escolha a forma de pagamento</h2>
+        <p class="sheet__description">
+          Selecione uma opcao para continuar o pedido.
+        </p>
+
+        <form id="payment-form" class="payment-form">
+          <fieldset class="payment-options">
+            <legend>Forma de pagamento</legend>
+            <label>
+              <input type="radio" name="payment-method" value="pix" required />
+              <span>Pix</span>
+            </label>
+            <label>
+              <input type="radio" name="payment-method" value="cartao" required />
+              <span>Credito/Debito</span>
+            </label>
+            <label>
+              <input type="radio" name="payment-method" value="dinheiro" required />
+              <span>Dinheiro</span>
+            </label>
+          </fieldset>
+
+          <label id="cash-change-field" class="form-field" for="cash-change" hidden>
+            Valor para troco
+            <input
+              id="cash-change"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              step="0.01"
+              placeholder="Ex.: 100,00"
+            />
+          </label>
+
+          <button class="button button--full" type="submit">Confirmar pagamento</button>
         </form>
       </section>
     </div>
