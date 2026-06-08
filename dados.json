@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "nome": "Pizzaria",
+    "versao": 1,
+    "fonte": "json-local",
+    "atualizadoEm": "2026-06-08"
+  },
+  "categorias": [
+    {
+      "id": "pizza-salgada",
+      "nome": "Pizzas salgadas"
+    },
+    {
+      "id": "pizza-doce",
+      "nome": "Pizzas doces"
+    },
+    {
+      "id": "sobremesa",
+      "nome": "Sobremesas"
+    },
+    {
+      "id": "bebida",
+      "nome": "Bebidas"
+    }
+  ],
+  "produtos": [
+    {
+      "id": "pizza-calabresa",
+      "categoriaId": "pizza-salgada",
+      "nome": "Pizza de calabresa",
+      "descricao": "Calabresa fatiada, cebola roxa, mussarela e oregano.",
+      "preco": 49.9,
+      "imagem": "./assets/images/pizza-salgada.svg",
+      "disponivel": true
+    },
+    {
+      "id": "pizza-marguerita",
+      "categoriaId": "pizza-salgada",
+      "nome": "Pizza marguerita",
+      "descricao": "Mussarela, tomate fresco, manjericao e molho artesanal.",
+      "preco": 52.9,
+      "imagem": "./assets/images/pizza-salgada.svg",
+      "disponivel": true
+    },
+    {
+      "id": "pizza-frango-catupiry",
+      "categoriaId": "pizza-salgada",
+      "nome": "Frango com catupiry",
+      "descricao": "Frango temperado, catupiry cremoso, milho e mussarela.",
+      "preco": 57.9,
+      "imagem": "./assets/images/pizza-salgada.svg",
+      "disponivel": true
+    },
+    {
+      "id": "pizza-chocolate-morango",
+      "categoriaId": "pizza-doce",
+      "nome": "Chocolate com morango",
+      "descricao": "Chocolate ao leite, morangos frescos e borda crocante.",
+      "preco": 46.9,
+      "imagem": "./assets/images/pizza-doce.svg",
+      "disponivel": true
+    },
+    {
+      "id": "pizza-banana-canela",
+      "categoriaId": "pizza-doce",
+      "nome": "Banana com canela",
+      "descricao": "Banana caramelizada, canela, leite condensado e mussarela.",
+      "preco": 42.9,
+      "imagem": "./assets/images/pizza-doce.svg",
+      "disponivel": true
+    },
+    {
+      "id": "brownie-sorvete",
+      "categoriaId": "sobremesa",
+      "nome": "Brownie com sorvete",
+      "descricao": "Brownie quente com sorvete de creme e calda de chocolate.",
+      "preco": 24.9,
+      "imagem": "./assets/images/sobremesa.svg",
+      "disponivel": true
+    },
+    {
+      "id": "pudim",
+      "categoriaId": "sobremesa",
+      "nome": "Pudim da casa",
+      "descricao": "Pudim de leite condensado com calda de caramelo.",
+      "preco": 15.9,
+      "imagem": "./assets/images/sobremesa.svg",
+      "disponivel": true
+    },
+    {
+      "id": "refrigerante-lata",
+      "categoriaId": "bebida",
+      "nome": "Refrigerante lata",
+      "descricao": "Lata 350ml gelada. Consulte sabores disponiveis.",
+      "preco": 7.9,
+      "imagem": "./assets/images/bebida.svg",
+      "disponivel": true
+    },
+    {
+      "id": "suco-natural",
+      "categoriaId": "bebida",
+      "nome": "Suco natural",
+      "descricao": "Suco natural 500ml preparado na hora.",
+      "preco": 12.9,
+      "imagem": "./assets/images/bebida.svg",
+      "disponivel": true
+    }
+  ],
+  "clientes": [],
+  "pedidos": []
+}

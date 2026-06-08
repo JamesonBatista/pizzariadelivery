@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-labelledby="title desc">
+  <title id="title">Bebida</title>
+  <desc id="desc">Ilustracao simples de uma bebida gelada.</desc>
+  <rect width="320" height="220" rx="28" fill="#eaf7ff"/>
+  <path d="M124 56h72l-12 124h-48z" fill="#42a5f5"/>
+  <path d="M135 90h50l-7 72h-36z" fill="#ffcc4d"/>
+  <path d="M142 56h36l-4-18h-28z" fill="#1b74bb"/>
+  <path d="M206 38l-30 56" stroke="#e84f5f" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="152" cy="116" r="7" fill="#fff5c2" opacity=".85"/>
+  <circle cx="170" cy="138" r="7" fill="#fff5c2" opacity=".85"/>
+</svg>

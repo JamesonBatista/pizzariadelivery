@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#c62828" />
+    <title>Pizzaria | Cardapio</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <section id="splash-screen" class="splash" aria-live="polite" aria-busy="true">
+      <div class="splash__content">
+        <div class="splash__brand" aria-hidden="true">🍕</div>
+        <p class="splash__eyebrow">Pizzaria</p>
+        <h1 class="splash__title">Preparando seu cardapio</h1>
+        <div class="splash__loader" aria-hidden="true"></div>
+        <p id="splash-message" class="splash__message">Carregando dados...</p>
+      </div>
+    </section>
+
+    <main id="app-shell" class="app" hidden>
+      <header class="hero">
+        <div>
+          <p class="hero__eyebrow">Pedido online</p>
+          <h1>Escolha sua pizza</h1>
+          <p class="hero__text">
+            Cardapio separado por categorias para facilitar as proximas etapas de configuracao.
+          </p>
+        </div>
+      </header>
+
+      <section class="menu-section" aria-labelledby="menu-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-heading__eyebrow">Cardapio</p>
+            <h2 id="menu-title">Produtos disponiveis</h2>
+          </div>
+        </div>
+
+        <nav id="category-list" class="category-list" aria-label="Categorias do cardapio"></nav>
+
+        <div id="product-list" class="product-grid" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <div id="item-sheet-backdrop" class="sheet-backdrop" hidden>
+      <section
+        id="item-sheet"
+        class="sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="sheet-title"
+      >
+        <div class="sheet__handle" aria-hidden="true"></div>
+        <button id="sheet-close" class="sheet__close" type="button" aria-label="Fechar">
+          &times;
+        </button>
+
+        <div class="sheet__product">
+          <img id="sheet-product-image" alt="" />
+          <div>
+            <p id="sheet-product-category" class="sheet__category"></p>
+            <h2 id="sheet-title"></h2>
+            <p id="sheet-product-description" class="sheet__description"></p>
+            <strong id="sheet-product-price" class="sheet__price"></strong>
+          </div>
+        </div>
+
+        <form id="item-form" class="item-form">
+          <div class="form-row">
+            <label for="quantity-value">Quantidade</label>
+            <div class="quantity-control">
+              <button id="decrease-quantity" type="button" aria-label="Diminuir quantidade">-</button>
+              <output id="quantity-value" for="decrease-quantity increase-quantity">1</output>
+              <button id="increase-quantity" type="button" aria-label="Aumentar quantidade">+</button>
+            </div>
+          </div>
+
+          <label class="checkbox-row">
+            <input id="extra-filling" type="checkbox" />
+            <span>Adicionar recheio extra?</span>
+          </label>
+
+          <label class="form-field" for="item-notes">
+            Observacao do item
+            <textarea
+              id="item-notes"
+              rows="3"
+              placeholder="Ex.: sem cebola, massa bem assada..."
+            ></textarea>
+          </label>
+
+          <button class="button button--full" type="submit">Adicionar ao pedido</button>
+        </form>
+      </section>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
