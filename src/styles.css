@@ -509,6 +509,7 @@ img {
 .button--full {
   width: 100%;
   margin-top: 8px;
+  padding: 0 18px;
 }
 
 .empty-state {
@@ -685,12 +686,21 @@ img {
   position: sticky;
   bottom: 0;
   display: grid;
+  align-content: start;
   gap: 12px;
   margin: 18px -16px calc(-16px - var(--safe-bottom));
   padding: 14px 16px calc(16px + var(--safe-bottom));
   border-top: 1px solid rgba(240, 223, 215, 0.9);
   background: rgba(255, 248, 243, 0.94);
   backdrop-filter: blur(14px);
+}
+
+.cart-footer .button--full {
+  height: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  align-self: start;
+  margin-top: 2px;
 }
 
 .cart-totals {
