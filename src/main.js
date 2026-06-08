@@ -3,6 +3,7 @@ import { createPizzariaRepository } from "./repositories/pizzariaRepository.js";
 import { createDatabaseService } from "./services/databaseService.js";
 import { calculateCartTotals } from "./services/pricingService.js";
 import { registerPwaServiceWorker } from "./services/pwaService.js";
+import { createBottomNavigation } from "./ui/bottomNavigation.js";
 import { createCartDrawer } from "./ui/cartDrawer.js";
 import { createCartSummary } from "./ui/cartSummary.js";
 import { createItemSheet } from "./ui/itemSheet.js";
@@ -10,13 +11,17 @@ import { createMenuView } from "./ui/menuView.js";
 import { createPaymentSheet } from "./ui/paymentSheet.js";
 import { createSplashController } from "./ui/splashController.js";
 import { createToast } from "./ui/toast.js";
+import { createUserProfileScreen } from "./ui/userProfileScreen.js";
 
 const elements = {
   splash: document.querySelector("#splash-screen"),
   splashMessage: document.querySelector("#splash-message"),
   appShell: document.querySelector("#app-shell"),
+  bottomNav: document.querySelector("#bottom-nav"),
+  bottomNavButtons: [...document.querySelectorAll(".bottom-nav__button")],
   cartButton: document.querySelector(".cart-pill"),
   cartCount: document.querySelector("#cart-count"),
+  bottomCartCount: document.querySelector("#bottom-cart-count"),
   categoryList: document.querySelector("#category-list"),
   productList: document.querySelector("#product-list"),
   toast: document.querySelector("#toast"),
@@ -53,6 +58,10 @@ const elements = {
     form: document.querySelector("#payment-form"),
     cashChangeField: document.querySelector("#cash-change-field"),
     cashChange: document.querySelector("#cash-change")
+  },
+  userProfile: {
+    backdrop: document.querySelector("#user-profile-backdrop"),
+    backButton: document.querySelector("#user-profile-back")
   }
 };
 
@@ -71,7 +80,7 @@ const toast = createToast(elements.toast);
 const databaseService = createDatabaseService();
 const repository = createPizzariaRepository(databaseService);
 const cartSummary = createCartSummary({
-  countElement: elements.cartCount,
+  countElement: [elements.cartCount, elements.bottomCartCount],
   buttonElement: elements.cartButton
 });
 
@@ -144,9 +153,18 @@ const paymentSheet = createPaymentSheet({
   }
 });
 
+const userProfileScreen = createUserProfileScreen({
+  elements: elements.userProfile,
+  onBack() {
+    bottomNavigation.setActive("home");
+  }
+});
+
 const cartDrawer = createCartDrawer({
   elements: elements.cartDrawer,
-  onBack() {},
+  onBack() {
+    bottomNavigation.setActive("home");
+  },
   onCheckout() {
     if (state.carrinhoItens.length === 0) {
       toast.show("Adicione um item antes de efetuar o pedido.");
@@ -195,7 +213,33 @@ const cartDrawer = createCartDrawer({
   }
 });
 
+const bottomNavigation = createBottomNavigation({
+  element: elements.bottomNav,
+  buttons: elements.bottomNavButtons,
+  onSelect(route) {
+    if (route === "home") {
+      cartDrawer.close();
+      userProfileScreen.close();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (route === "cart") {
+      userProfileScreen.close();
+      renderCart();
+      cartDrawer.open();
+      return;
+    }
+
+    if (route === "user") {
+      cartDrawer.close();
+      userProfileScreen.open();
+    }
+  }
+});
+
 elements.cartButton.addEventListener("click", () => {
+  bottomNavigation.setActive("cart");
   renderCart();
   cartDrawer.open();
 });
@@ -206,6 +250,7 @@ function renderApp() {
   menuView.renderProducts(filtrarProdutos());
   renderCart();
   elements.appShell.hidden = false;
+  bottomNavigation.show();
 }
 
 async function startApp() {
