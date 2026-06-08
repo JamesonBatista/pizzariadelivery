@@ -23,6 +23,28 @@
       "nome": "Bebidas"
     }
   ],
+  "banner": [
+    {
+      "id": "promocao-do-dia",
+      "titulo": "Promocao do dia",
+      "descricao": "Oferta especial para pedir agora",
+      "modo": "auto",
+      "produto": [
+        {
+          "item": "Pizza G calabresa",
+          "valor": 59
+        },
+        {
+          "item": "Pizza G marguerita",
+          "valor": 62
+        },
+        {
+          "item": "Frango com catupiry G",
+          "valor": 65
+        }
+      ]
+    }
+  ],
   "produtos": [
     {
       "id": "pizza-calabresa",
@@ -31,6 +53,55 @@
       "descricao": "Calabresa fatiada, cebola roxa, mussarela e oregano.",
       "preco": 49.9,
       "imagem": "./assets/images/pizza-salgada.svg",
+      "tamanhos": [
+        {
+          "id": "p",
+          "nome": "Pequena",
+          "fatias": 4,
+          "preco": 39.9
+        },
+        {
+          "id": "m",
+          "nome": "Media",
+          "fatias": 6,
+          "preco": 49.9
+        },
+        {
+          "id": "g",
+          "nome": "Grande",
+          "fatias": 8,
+          "preco": 59
+        },
+        {
+          "id": "familia",
+          "nome": "Familia",
+          "fatias": 12,
+          "preco": 74.9
+        }
+      ],
+      "ingredientesEmDobro": [
+        {
+          "id": "calabresa",
+          "nome": "Calabresa",
+          "preco": 6
+        },
+        {
+          "id": "mussarela",
+          "nome": "Mussarela",
+          "preco": 5
+        },
+        {
+          "id": "cebola",
+          "nome": "Cebola roxa",
+          "preco": 3
+        },
+        {
+          "id": "oregano",
+          "nome": "Oregano",
+          "preco": 2
+        }
+      ],
+      "permiteMeioAMeio": true,
       "disponivel": true
     },
     {
@@ -40,6 +111,55 @@
       "descricao": "Mussarela, tomate fresco, manjericao e molho artesanal.",
       "preco": 52.9,
       "imagem": "./assets/images/pizza-salgada.svg",
+      "tamanhos": [
+        {
+          "id": "p",
+          "nome": "Pequena",
+          "fatias": 4,
+          "preco": 42.9
+        },
+        {
+          "id": "m",
+          "nome": "Media",
+          "fatias": 6,
+          "preco": 52.9
+        },
+        {
+          "id": "g",
+          "nome": "Grande",
+          "fatias": 8,
+          "preco": 62
+        },
+        {
+          "id": "familia",
+          "nome": "Familia",
+          "fatias": 12,
+          "preco": 78.9
+        }
+      ],
+      "ingredientesEmDobro": [
+        {
+          "id": "mussarela",
+          "nome": "Mussarela",
+          "preco": 5
+        },
+        {
+          "id": "tomate",
+          "nome": "Tomate fresco",
+          "preco": 4
+        },
+        {
+          "id": "manjericao",
+          "nome": "Manjericao",
+          "preco": 3
+        },
+        {
+          "id": "molho",
+          "nome": "Molho artesanal",
+          "preco": 4
+        }
+      ],
+      "permiteMeioAMeio": true,
       "disponivel": true
     },
     {
@@ -49,6 +169,55 @@
       "descricao": "Frango temperado, catupiry cremoso, milho e mussarela.",
       "preco": 57.9,
       "imagem": "./assets/images/pizza-salgada.svg",
+      "tamanhos": [
+        {
+          "id": "p",
+          "nome": "Pequena",
+          "fatias": 4,
+          "preco": 44.9
+        },
+        {
+          "id": "m",
+          "nome": "Media",
+          "fatias": 6,
+          "preco": 57.9
+        },
+        {
+          "id": "g",
+          "nome": "Grande",
+          "fatias": 8,
+          "preco": 65
+        },
+        {
+          "id": "familia",
+          "nome": "Familia",
+          "fatias": 12,
+          "preco": 82.9
+        }
+      ],
+      "ingredientesEmDobro": [
+        {
+          "id": "frango",
+          "nome": "Frango",
+          "preco": 6
+        },
+        {
+          "id": "catupiry",
+          "nome": "Catupiry",
+          "preco": 7
+        },
+        {
+          "id": "milho",
+          "nome": "Milho",
+          "preco": 3
+        },
+        {
+          "id": "mussarela",
+          "nome": "Mussarela",
+          "preco": 5
+        }
+      ],
+      "permiteMeioAMeio": true,
       "disponivel": true
     },
     {
@@ -58,6 +227,50 @@
       "descricao": "Chocolate ao leite, morangos frescos e borda crocante.",
       "preco": 46.9,
       "imagem": "./assets/images/pizza-doce.svg",
+      "tamanhos": [
+        {
+          "id": "p",
+          "nome": "Pequena",
+          "fatias": 4,
+          "preco": 36.9
+        },
+        {
+          "id": "m",
+          "nome": "Media",
+          "fatias": 6,
+          "preco": 46.9
+        },
+        {
+          "id": "g",
+          "nome": "Grande",
+          "fatias": 8,
+          "preco": 56.9
+        },
+        {
+          "id": "familia",
+          "nome": "Familia",
+          "fatias": 12,
+          "preco": 69.9
+        }
+      ],
+      "ingredientesEmDobro": [
+        {
+          "id": "chocolate",
+          "nome": "Chocolate",
+          "preco": 6
+        },
+        {
+          "id": "morango",
+          "nome": "Morango",
+          "preco": 5
+        },
+        {
+          "id": "granulado",
+          "nome": "Granulado",
+          "preco": 2
+        }
+      ],
+      "permiteMeioAMeio": true,
       "disponivel": true
     },
     {
@@ -67,6 +280,50 @@
       "descricao": "Banana caramelizada, canela, leite condensado e mussarela.",
       "preco": 42.9,
       "imagem": "./assets/images/pizza-doce.svg",
+      "tamanhos": [
+        {
+          "id": "p",
+          "nome": "Pequena",
+          "fatias": 4,
+          "preco": 34.9
+        },
+        {
+          "id": "m",
+          "nome": "Media",
+          "fatias": 6,
+          "preco": 42.9
+        },
+        {
+          "id": "g",
+          "nome": "Grande",
+          "fatias": 8,
+          "preco": 52.9
+        },
+        {
+          "id": "familia",
+          "nome": "Familia",
+          "fatias": 12,
+          "preco": 64.9
+        }
+      ],
+      "ingredientesEmDobro": [
+        {
+          "id": "banana",
+          "nome": "Banana",
+          "preco": 4
+        },
+        {
+          "id": "canela",
+          "nome": "Canela",
+          "preco": 2
+        },
+        {
+          "id": "leite-condensado",
+          "nome": "Leite condensado",
+          "preco": 4
+        }
+      ],
+      "permiteMeioAMeio": true,
       "disponivel": true
     },
     {

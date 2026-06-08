@@ -7,6 +7,10 @@ export function createPizzariaRepository(databaseService) {
     return databaseService.getCollection(collections.categorias);
   }
 
+  async function listarBanners() {
+    return databaseService.getCollection(collections.banner);
+  }
+
   async function listarProdutos() {
     const produtos = await databaseService.getCollection(collections.produtos);
     return produtos.filter((produto) => produto.disponivel !== false);
@@ -25,6 +29,7 @@ export function createPizzariaRepository(databaseService) {
   }
 
   return {
+    listarBanners,
     listarCategorias,
     listarProdutos,
     listarClientes,

@@ -4,7 +4,7 @@ Aplicacao estatica para cardapio de pizzaria, preparada como Web App mobile/iOS 
 
 ## Estrutura principal
 
-- `dados.json`: fonte temporaria de dados para produtos, categorias, clientes e pedidos.
+- `dados.json`: fonte temporaria de dados para banner, produtos, categorias, clientes e pedidos.
 - `src/config/appConfig.js`: configuracoes gerais, caminho do JSON local, taxa de entrega e valor do recheio extra em `pricing`.
 - `src/config/firestoreConfig.js`: ponto unico para receber os dados de conexao do Firestore.
 - `src/config/whatsappConfig.js`: ponto unico para configurar o envio futuro de mensagens pelo WhatsApp.
@@ -13,7 +13,7 @@ Aplicacao estatica para cardapio de pizzaria, preparada como Web App mobile/iOS 
 - `src/services/whatsappService.js`: prepara mensagens de WhatsApp sem enviar enquanto o provider nao for conectado.
 - `src/services/orderNotificationService.js`: centraliza notificacoes futuras de pedido aceito, saiu para entrega e contato com cliente.
 - `manifest.json`, `service-worker.js` e `assets/icons/pizza-icon.svg`: configuracao de Web App para mobile/iOS.
-- `src/ui/`: componentes visuais separados por responsabilidade, incluindo cardapio, barra inferior, carrinho, usuario, pagamento e confirmacao do pedido.
+- `src/ui/`: componentes visuais separados por responsabilidade, incluindo banner, cardapio, barra inferior, carrinho, usuario, pagamento e confirmacao do pedido.
 
 ## Como rodar localmente
 

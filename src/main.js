@@ -10,6 +10,7 @@ import { createItemSheet } from "./ui/itemSheet.js";
 import { createMenuView } from "./ui/menuView.js";
 import { createOrderConfirmationPopup } from "./ui/orderConfirmationPopup.js";
 import { createPaymentSheet } from "./ui/paymentSheet.js";
+import { createPromoBanner } from "./ui/promoBanner.js";
 import { createSplashController } from "./ui/splashController.js";
 import { createToast } from "./ui/toast.js";
 import { createUserProfileScreen } from "./ui/userProfileScreen.js";
@@ -23,6 +24,7 @@ const elements = {
   cartButton: document.querySelector(".cart-pill"),
   cartCount: document.querySelector("#cart-count"),
   bottomCartCount: document.querySelector("#bottom-cart-count"),
+  promoBanner: document.querySelector("#promo-banner"),
   categoryList: document.querySelector("#category-list"),
   productList: document.querySelector("#product-list"),
   toast: document.querySelector("#toast"),
@@ -35,6 +37,13 @@ const elements = {
     description: document.querySelector("#sheet-product-description"),
     price: document.querySelector("#sheet-product-price"),
     form: document.querySelector("#item-form"),
+    sizeOptions: document.querySelector("#size-options"),
+    halfAndHalfGroup: document.querySelector("#half-and-half-group"),
+    halfAndHalf: document.querySelector("#half-and-half"),
+    secondFlavorField: document.querySelector("#second-flavor-field"),
+    secondFlavor: document.querySelector("#second-flavor"),
+    doubleIngredientsGroup: document.querySelector("#double-ingredients-group"),
+    doubleIngredients: document.querySelector("#double-ingredients"),
     decreaseQuantity: document.querySelector("#decrease-quantity"),
     increaseQuantity: document.querySelector("#increase-quantity"),
     quantityValue: document.querySelector("#quantity-value"),
@@ -77,6 +86,7 @@ const elements = {
 };
 
 const state = {
+  banners: [],
   categorias: [],
   produtos: [],
   categoriaAtiva: appConfig.defaultCategoryId,
@@ -93,6 +103,9 @@ const repository = createPizzariaRepository(databaseService);
 const cartSummary = createCartSummary({
   countElement: [elements.cartCount, elements.bottomCartCount],
   buttonElement: elements.cartButton
+});
+const promoBanner = createPromoBanner({
+  element: elements.promoBanner
 });
 
 registerPwaServiceWorker();
@@ -137,6 +150,7 @@ const menuView = createMenuView({
 const itemSheet = createItemSheet({
   elements: elements.itemSheet,
   getCategoryName: menuView.getCategoryName,
+  getProducts: () => state.produtos,
   pricing: appConfig.pricing,
   async onSubmit(itemPedido) {
     try {
@@ -271,6 +285,7 @@ elements.cartButton.addEventListener("click", () => {
 });
 
 function renderApp() {
+  promoBanner.render(state.banners);
   menuView.renderCategories(state.categorias);
   menuView.setActiveCategory(state.categoriaAtiva);
   menuView.renderProducts(filtrarProdutos());
@@ -283,11 +298,13 @@ async function startApp() {
   splash.show("Carregando cardapio...");
 
   try {
-    const [categorias, produtos] = await Promise.all([
+    const [banners, categorias, produtos] = await Promise.all([
+      repository.listarBanners(),
       repository.listarCategorias(),
       repository.listarProdutos()
     ]);
 
+    state.banners = banners;
     state.categorias = categorias;
     state.produtos = produtos;
     renderApp();

@@ -5,6 +5,7 @@ export const firestoreConfig = Object.freeze({
   authDomain: "",
   appId: "",
   collections: {
+    banner: "banner",
     categorias: "categorias",
     produtos: "produtos",
     clientes: "clientes",
