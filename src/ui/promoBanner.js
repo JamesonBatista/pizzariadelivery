@@ -23,6 +23,17 @@ function createBannerCard(banner, onOrderBanner) {
   description.className = "promo-banner__description";
   description.textContent = banner.descricao || "Confira a promocao preparada para hoje.";
 
+  const art = document.createElement("div");
+  art.className = "promo-banner__art";
+  art.setAttribute("aria-hidden", "true");
+  art.innerHTML = `
+    <span class="promo-banner__pizza">
+      <i></i><i></i><i></i><i></i>
+    </span>
+    <span class="promo-banner__spark promo-banner__spark--one"></span>
+    <span class="promo-banner__spark promo-banner__spark--two"></span>
+  `;
+
   const offers = document.createElement("div");
   offers.className = "promo-banner__offers";
 
@@ -54,7 +65,7 @@ function createBannerCard(banner, onOrderBanner) {
   button.addEventListener("click", () => onOrderBanner(banner));
 
   footer.append(total, button);
-  card.append(label, title, description, offers, footer);
+  card.append(label, title, description, art, offers, footer);
   return card;
 }
 

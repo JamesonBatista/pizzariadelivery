@@ -14,8 +14,11 @@
   --bottom-nav-height: 70px;
   --bottom-nav-gap: 12px;
   --safe-bottom: env(safe-area-inset-bottom, 0);
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-ui:
+    Inter, Nunito, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-brand: Barriecito, "Playfair Display", Satisfy, Georgia, serif;
+  --font-script: Satisfy, "Playfair Display", Georgia, serif;
+  font-family: var(--font-ui);
 }
 
 * {
@@ -332,7 +335,9 @@ img {
 }
 
 .top-bar__brand strong {
+  font-family: var(--font-brand);
   font-size: 1rem;
+  letter-spacing: 0.01em;
   line-height: 1;
 }
 
@@ -375,12 +380,17 @@ img {
   margin: 10px 0 22px;
   display: grid;
   gap: 10px;
+  filter: drop-shadow(0 24px 34px rgba(96, 33, 20, 0.16));
 }
 
 .promo-banner__viewport {
   overflow: hidden;
-  border-radius: 30px;
-  box-shadow: 0 18px 50px rgba(89, 35, 21, 0.18);
+  border: 1px solid rgba(255, 211, 111, 0.26);
+  border-radius: 34px;
+  background: #211816;
+  box-shadow:
+    0 20px 54px rgba(89, 35, 21, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .promo-banner__track {
@@ -390,25 +400,78 @@ img {
 }
 
 .promo-banner__slide {
+  position: relative;
   min-height: 236px;
   display: grid;
   align-content: start;
-  gap: 10px;
+  gap: 11px;
   flex: 0 0 100%;
-  padding: 22px;
+  overflow: hidden;
+  padding: 24px;
   background:
-    radial-gradient(circle at 88% 22%, rgba(255, 209, 102, 0.5), transparent 10rem),
-    linear-gradient(135deg, #211816 0%, #9f1f1f 58%, #c62828 100%);
+    radial-gradient(circle at 88% 24%, rgba(255, 209, 102, 0.48), transparent 8rem),
+    radial-gradient(circle at 8% 10%, rgba(255, 255, 255, 0.11), transparent 8rem),
+    linear-gradient(135deg, #211816 0%, #7f1b16 48%, #d33122 100%);
   color: #fff;
+}
+
+.promo-banner__slide::before,
+.promo-banner__slide::after {
+  position: absolute;
+  pointer-events: none;
+  content: "";
+}
+
+.promo-banner__slide::before {
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(255, 209, 102, 0.22) 0 3px, transparent 4px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.12) 0 2px, transparent 3px),
+    linear-gradient(110deg, transparent 0 38%, rgba(255, 255, 255, 0.18) 46%, transparent 55%);
+  background-position:
+    20px 24px,
+    78px 92px,
+    -220px 0;
+  background-size:
+    96px 96px,
+    132px 132px,
+    220px 100%;
+  mix-blend-mode: screen;
+  opacity: 0.9;
+  animation: bannerShine 5.8s ease-in-out infinite;
+}
+
+.promo-banner__slide::after {
+  right: -52px;
+  bottom: -70px;
+  width: 184px;
+  height: 184px;
+  border: 12px solid rgba(117, 58, 25, 0.28);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 34%, #b71c1c 0 13px, transparent 14px),
+    radial-gradient(circle at 62% 28%, #b71c1c 0 13px, transparent 14px),
+    radial-gradient(circle at 50% 66%, #b71c1c 0 13px, transparent 14px),
+    radial-gradient(circle at 72% 68%, #f7f0be 0 9px, transparent 10px),
+    #f0a932;
+  box-shadow: 0 22px 60px rgba(33, 24, 22, 0.34);
+  opacity: 0.62;
+  transform: rotate(-16deg);
+}
+
+.promo-banner__slide > * {
+  position: relative;
+  z-index: 1;
 }
 
 .promo-banner__label {
   display: inline-flex;
   justify-self: start;
   margin: 0 0 8px;
-  padding: 7px 10px;
+  padding: 8px 11px;
   border-radius: 999px;
-  background: rgba(255, 209, 102, 0.18);
+  background: rgba(255, 209, 102, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
   color: #ffd166;
   font-size: 0.72rem;
   font-weight: 900;
@@ -417,20 +480,107 @@ img {
 }
 
 .promo-banner h2 {
+  max-width: 76%;
   margin: 0;
-  font-size: clamp(1.7rem, 8vw, 3rem);
-  line-height: 0.95;
+  font-family: var(--font-brand);
+  font-size: clamp(2.15rem, 12vw, 4.2rem);
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  line-height: 0.82;
+  text-shadow:
+    0 3px 0 rgba(83, 20, 14, 0.36),
+    0 18px 38px rgba(0, 0, 0, 0.28);
 }
 
 .promo-banner__description {
   max-width: 520px;
   margin: 0 0 8px;
   color: rgba(255, 255, 255, 0.82);
+  font-weight: 800;
+}
+
+.promo-banner__art {
+  position: absolute;
+  right: 20px;
+  top: 22px;
+  z-index: 0;
+  width: 92px;
+  height: 92px;
+  opacity: 0.95;
+}
+
+.promo-banner__pizza {
+  position: absolute;
+  inset: 12px;
+  display: block;
+  border: 8px solid #d4872d;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 34%, #b71c1c 0 7px, transparent 8px),
+    radial-gradient(circle at 66% 30%, #b71c1c 0 7px, transparent 8px),
+    radial-gradient(circle at 52% 68%, #b71c1c 0 7px, transparent 8px),
+    #ffd166;
+  box-shadow:
+    0 18px 40px rgba(33, 24, 22, 0.24),
+    inset 0 0 0 5px rgba(255, 245, 187, 0.36);
+  transform: rotate(-14deg);
+  animation: pizzaFloat 4.6s ease-in-out infinite;
+}
+
+.promo-banner__pizza i {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff2b2;
+}
+
+.promo-banner__pizza i:nth-child(1) {
+  left: 18px;
+  top: 16px;
+}
+
+.promo-banner__pizza i:nth-child(2) {
+  right: 18px;
+  top: 30px;
+}
+
+.promo-banner__pizza i:nth-child(3) {
+  left: 32px;
+  bottom: 14px;
+}
+
+.promo-banner__pizza i:nth-child(4) {
+  right: 30px;
+  bottom: 28px;
+}
+
+.promo-banner__spark {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  background: #ffd166;
+  box-shadow: 0 0 20px rgba(255, 209, 102, 0.64);
+}
+
+.promo-banner__spark--one {
+  width: 10px;
+  height: 10px;
+  right: 4px;
+  top: 12px;
+}
+
+.promo-banner__spark--two {
+  width: 7px;
+  height: 7px;
+  left: 6px;
+  bottom: 14px;
 }
 
 .promo-banner__offers {
   display: grid;
-  gap: 10px;
+  gap: 9px;
+  max-width: 90%;
 }
 
 .promo-banner__offer {
@@ -438,22 +588,28 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 13px 14px;
+  padding: 12px 14px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 8px 20px rgba(33, 24, 22, 0.12);
+  backdrop-filter: blur(4px);
 }
 
 .promo-banner__offer strong {
-  font-size: 0.98rem;
+  font-family: var(--font-ui);
+  font-size: 0.94rem;
+  font-weight: 900;
   line-height: 1.2;
 }
 
 .promo-banner__offer span {
   flex: 0 0 auto;
   color: #ffd166;
-  font-size: 1.32rem;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.28rem;
   font-weight: 1000;
 }
 
@@ -467,19 +623,36 @@ img {
 
 .promo-banner__total {
   color: #ffd166;
-  font-size: clamp(1.45rem, 8vw, 2.4rem);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.55rem, 8vw, 2.6rem);
   line-height: 1;
+  text-shadow: 0 10px 28px rgba(255, 209, 102, 0.22);
 }
 
 .promo-banner__button {
   min-height: 46px;
-  padding: 0 20px;
+  padding: 0 22px;
   border: 0;
   border-radius: 999px;
-  background: #ffd166;
+  background:
+    linear-gradient(180deg, #ffe08a 0%, #ffd166 52%, #f2a51f 100%);
   color: #211816;
   font-weight: 1000;
-  box-shadow: 0 12px 28px rgba(255, 209, 102, 0.28);
+  letter-spacing: 0.02em;
+  box-shadow:
+    0 12px 28px rgba(255, 209, 102, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.promo-banner__button:hover,
+.promo-banner__button:focus-visible {
+  transform: translateY(-2px);
+  box-shadow:
+    0 16px 34px rgba(255, 209, 102, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.58);
 }
 
 .promo-banner__dots {
@@ -1417,6 +1590,35 @@ img {
   }
 }
 
+@keyframes bannerShine {
+  0%,
+  42% {
+    background-position:
+      20px 24px,
+      78px 92px,
+      -220px 0;
+  }
+
+  70%,
+  100% {
+    background-position:
+      20px 24px,
+      78px 92px,
+      120% 0;
+  }
+}
+
+@keyframes pizzaFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-14deg);
+  }
+
+  50% {
+    transform: translateY(-7px) rotate(-8deg);
+  }
+}
+
 @keyframes offerPulse {
   0%,
   100% {
@@ -1447,6 +1649,32 @@ img {
   from {
     transform: translateY(18px);
     opacity: 0.8;
+  }
+}
+
+@media (max-width: 390px) {
+  .promo-banner__slide {
+    padding: 20px;
+  }
+
+  .promo-banner h2 {
+    max-width: 72%;
+    font-size: clamp(1.95rem, 11vw, 3rem);
+  }
+
+  .promo-banner__art {
+    right: 8px;
+    top: 18px;
+    width: 78px;
+    height: 78px;
+  }
+
+  .promo-banner__offers {
+    max-width: 100%;
+  }
+
+  .promo-banner__footer {
+    align-items: flex-end;
   }
 }
 
