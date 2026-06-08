@@ -4,12 +4,16 @@ Aplicacao estatica para cardapio de pizzaria, preparada como Web App mobile/iOS 
 
 ## Estrutura principal
 
-- `dados.json`: fonte temporaria de dados para banner, produtos, categorias, clientes e pedidos.
+- `dados.json`: fonte temporaria de dados para ADM, configuracoes, banner, produtos, categorias, clientes, pedidos, status e templates de WhatsApp.
+- `src/config/adminConfig.js`: secoes, permissoes e papeis planejados para o painel ADM.
 - `src/config/appConfig.js`: configuracoes gerais, caminho do JSON local, taxa de entrega e valor do recheio extra em `pricing`.
 - `src/config/firestoreConfig.js`: ponto unico para receber os dados de conexao do Firestore.
+- `src/config/orderStatusConfig.js`: fluxo centralizado de status dos pedidos e quais status notificam cliente.
 - `src/config/whatsappConfig.js`: ponto unico para configurar o envio futuro de mensagens pelo WhatsApp.
 - `src/database/`: clientes de banco. Hoje usa `fakeFirestoreClient.js`; futuramente a conexao real entra em `firestoreConnection.js`.
+- `src/repositories/adminRepository.js`: CRUD administrativo para banner, categorias, produtos, clientes, pedidos, configuracoes, status e WhatsApp.
 - `src/repositories/pizzariaRepository.js`: camada de CRUD usada pela interface.
+- `src/services/adminService.js`: acoes de negocio do ADM, como salvar produto/banner, alterar status do pedido, preparar notificacao e registrar auditoria.
 - `src/services/whatsappService.js`: prepara mensagens de WhatsApp sem enviar enquanto o provider nao for conectado.
 - `src/services/orderNotificationService.js`: centraliza notificacoes futuras de pedido aceito, saiu para entrega e contato com cliente.
 - `manifest.json`, `service-worker.js` e `assets/icons/pizza-icon.svg`: configuracao de Web App para mobile/iOS.
@@ -28,3 +32,14 @@ Depois acesse `http://localhost:4173`.
 ## GitHub Pages
 
 Publique a raiz do repositorio. Os caminhos foram definidos de forma relativa (`./...`) para funcionar em subpaths do GitHub Pages.
+
+## Preparacao para ADM
+
+A tela ADM ainda nao foi criada, mas a base esta separada para receber:
+
+- Cadastro/edicao/remocao de produtos e categorias.
+- Controle do banner principal pelo array `banner`.
+- Alteracao de taxa, tempo de entrega e configuracoes gerais em `configuracoes`.
+- Controle de status dos pedidos em `statusPedidos`.
+- Templates editaveis de WhatsApp em `whatsappTemplates`.
+- Auditoria administrativa em `adminAuditoria`.

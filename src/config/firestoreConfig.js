@@ -7,9 +7,13 @@ export const firestoreConfig = Object.freeze({
   collections: {
     banner: "banner",
     categorias: "categorias",
+    configuracoes: "configuracoes",
     produtos: "produtos",
     clientes: "clientes",
-    pedidos: "pedidos"
+    pedidos: "pedidos",
+    statusPedidos: "statusPedidos",
+    whatsappTemplates: "whatsappTemplates",
+    adminAuditoria: "adminAuditoria"
   }
 });
 
