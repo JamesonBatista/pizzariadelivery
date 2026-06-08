@@ -2,9 +2,17 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#c62828" />
-    <title>Pizzaria | Cardapio</title>
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Pizzaria" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Web App mobile para cardapio e pedidos de pizzaria." />
+    <title>Pizzaria | Cardapio Mobile</title>
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" href="./assets/icons/pizza-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./assets/icons/pizza-icon.svg" />
     <link rel="stylesheet" href="./src/styles.css" />
   </head>
   <body>
@@ -19,13 +27,35 @@
     </section>
 
     <main id="app-shell" class="app" hidden>
+      <div class="top-bar" aria-label="Resumo do pedido">
+        <div class="top-bar__brand">
+          <span class="top-bar__logo" aria-hidden="true">🍕</span>
+          <div>
+            <strong>Pizzaria</strong>
+            <small>Forno quente, pedido facil</small>
+          </div>
+        </div>
+
+        <button class="cart-pill" type="button" aria-label="Carrinho com 0 itens">
+          <span aria-hidden="true">🛒</span>
+          <span>Carrinho</span>
+          <strong id="cart-count">0</strong>
+        </button>
+      </div>
+
       <header class="hero">
         <div>
-          <p class="hero__eyebrow">Pedido online</p>
-          <h1>Escolha sua pizza</h1>
+          <p class="hero__eyebrow">Pedido online da pizzaria</p>
+          <h1>Pizza quentinha no seu jeito</h1>
           <p class="hero__text">
-            Cardapio separado por categorias para facilitar as proximas etapas de configuracao.
+            Monte seu pedido com pizzas salgadas, doces, sobremesas e bebidas em uma experiencia
+            feita para celular.
           </p>
+          <div class="hero__badges" aria-label="Destaques da pizzaria">
+            <span>Forno artesanal</span>
+            <span>Massa da casa</span>
+            <span>Entrega rapida</span>
+          </div>
         </div>
       </header>
 
@@ -78,7 +108,10 @@
 
           <label class="checkbox-row">
             <input id="extra-filling" type="checkbox" />
-            <span>Adicionar recheio extra?</span>
+            <span>
+              Adicionar recheio extra?
+              <small id="extra-filling-price"></small>
+            </span>
           </label>
 
           <label class="form-field" for="item-notes">
@@ -89,6 +122,11 @@
               placeholder="Ex.: sem cebola, massa bem assada..."
             ></textarea>
           </label>
+
+          <div class="sheet-total" aria-live="polite">
+            <span>Total do item</span>
+            <strong id="sheet-item-total"></strong>
+          </div>
 
           <button class="button button--full" type="submit">Adicionar ao pedido</button>
         </form>

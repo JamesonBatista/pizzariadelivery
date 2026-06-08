@@ -1,0 +1,20 @@
+{
+  "name": "Pizzaria Delivery",
+  "short_name": "Pizzaria",
+  "description": "Web App mobile para cardapio e pedidos de pizzaria.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fff8f3",
+  "theme_color": "#c62828",
+  "icons": [
+    {
+      "src": "./assets/icons/pizza-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "shopping"]
+}
