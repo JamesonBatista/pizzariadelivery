@@ -81,6 +81,19 @@
       </section>
     </main>
 
+    <nav id="bottom-nav" class="bottom-nav" aria-label="Navegacao principal" hidden>
+      <button class="bottom-nav__button is-active" type="button" data-route="home" aria-label="Tela principal">
+        <span aria-hidden="true">⌂</span>
+      </button>
+      <button class="bottom-nav__button" type="button" data-route="cart" aria-label="Carrinho">
+        <span aria-hidden="true">🛒</span>
+        <strong id="bottom-cart-count" class="bottom-nav__badge">0</strong>
+      </button>
+      <button class="bottom-nav__button" type="button" data-route="user" aria-label="Dados do usuario">
+        <span aria-hidden="true">👤</span>
+      </button>
+    </nav>
+
     <div id="item-sheet-backdrop" class="sheet-backdrop" hidden>
       <section
         id="item-sheet"
@@ -182,6 +195,34 @@
             Efetuar pedido
           </button>
         </footer>
+      </section>
+    </div>
+
+    <div id="user-profile-backdrop" class="screen-backdrop" hidden>
+      <section
+        class="user-screen"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="user-profile-title"
+      >
+        <header class="screen-header">
+          <button id="user-profile-back" class="screen-back" type="button">Voltar</button>
+          <div>
+            <p class="screen-header__eyebrow">Cliente</p>
+            <h2 id="user-profile-title">Dados do usuario</h2>
+          </div>
+        </header>
+
+        <div class="user-card">
+          <span class="user-card__icon" aria-hidden="true">👤</span>
+          <div>
+            <strong>Perfil do cliente</strong>
+            <p>
+              Esta tela fica preparada para receber nome, telefone, endereco e preferencias do
+              cliente nas proximas etapas.
+            </p>
+          </div>
+        </div>
       </section>
     </div>
 
