@@ -14,10 +14,11 @@ Aplicacao estatica para cardapio de pizzaria, preparada como Web App mobile/iOS 
 - `src/repositories/adminRepository.js`: CRUD administrativo para banner, categorias, produtos, clientes, pedidos, configuracoes, status e WhatsApp.
 - `src/repositories/pizzariaRepository.js`: camada de CRUD usada pela interface.
 - `src/services/adminService.js`: acoes de negocio do ADM, como salvar produto/banner, alterar status do pedido, preparar notificacao e registrar auditoria.
+- `src/services/customerStorageService.js`: salva localmente dados do cliente e pedidos confirmados enquanto nao ha autenticacao/Firestore real.
 - `src/services/whatsappService.js`: prepara mensagens de WhatsApp sem enviar enquanto o provider nao for conectado.
 - `src/services/orderNotificationService.js`: centraliza notificacoes futuras de pedido aceito, saiu para entrega e contato com cliente.
 - `manifest.json`, `service-worker.js` e `assets/icons/pizza-icon.svg`: configuracao de Web App para mobile/iOS.
-- `src/ui/`: componentes visuais separados por responsabilidade, incluindo banner, cardapio, barra inferior, carrinho, usuario, pagamento e confirmacao do pedido.
+- `src/ui/`: componentes visuais separados por responsabilidade, incluindo banner, cardapio, barra inferior, carrinho, usuario, pedidos, detalhes do pedido, pagamento e confirmacao do pedido.
 
 ## Como rodar localmente
 
