@@ -23,6 +23,9 @@ export function createOrderConfirmationPopup({ elements, onCancel, onConfirm }) 
       name.textContent = `${item.quantidade}x ${item.produtoNome}`;
       const meta = document.createElement("span");
       const metaParts = [];
+      if (item.itensBanner?.length) {
+        metaParts.push(`Combo: ${item.itensBanner.map((bannerItem) => bannerItem.nome).join(" + ")}`);
+      }
       if (item.tamanho) {
         metaParts.push(item.tamanho.nome);
       }

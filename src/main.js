@@ -105,7 +105,37 @@ const cartSummary = createCartSummary({
   buttonElement: elements.cartButton
 });
 const promoBanner = createPromoBanner({
-  element: elements.promoBanner
+  element: elements.promoBanner,
+  async onOrderBanner(banner) {
+    const unitPrice = banner.produto.reduce((total, item) => total + Number(item.valor || 0), 0);
+    const payload = {
+      produtoId: `banner-${banner.id}`,
+      produtoNome: banner.titulo,
+      bannerId: banner.id,
+      itensBanner: banner.produto.map((item) => ({
+        nome: item.item,
+        valor: Number(item.valor || 0)
+      })),
+      quantidade: 1,
+      recheioExtra: false,
+      valorRecheioExtra: 0,
+      observacao: banner.descricao || "",
+      precoBase: unitPrice,
+      precoUnitario: unitPrice,
+      total: unitPrice
+    };
+
+    try {
+      const savedItem = await splash.run("Adicionando promocao ao carrinho...", () =>
+        repository.criarItemPedido(payload)
+      );
+      state.carrinhoItens.push(savedItem);
+      renderCart();
+      toast.show("Promocao adicionada ao carrinho.");
+    } catch (error) {
+      toast.show(error.message || "Nao foi possivel adicionar a promocao.");
+    }
+  }
 });
 
 registerPwaServiceWorker();
