@@ -4,6 +4,9 @@ export const appConfig = Object.freeze({
   currency: "BRL",
   defaultCategoryId: "todos",
   defaultCategoryLabel: "Todos",
+  pricing: {
+    extraFillingPrice: 8
+  },
   dataSource: {
     driver: "json-local",
     jsonPath: "./dados.json"
