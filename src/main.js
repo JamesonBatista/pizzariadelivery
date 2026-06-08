@@ -1,6 +1,7 @@
 import { appConfig } from "./config/appConfig.js";
 import { createPizzariaRepository } from "./repositories/pizzariaRepository.js";
 import { createDatabaseService } from "./services/databaseService.js";
+import { createCustomerStorageService } from "./services/customerStorageService.js";
 import { calculateCartTotals } from "./services/pricingService.js";
 import { registerPwaServiceWorker } from "./services/pwaService.js";
 import { createBottomNavigation } from "./ui/bottomNavigation.js";
@@ -9,6 +10,8 @@ import { createCartSummary } from "./ui/cartSummary.js";
 import { createItemSheet } from "./ui/itemSheet.js";
 import { createMenuView } from "./ui/menuView.js";
 import { createOrderConfirmationPopup } from "./ui/orderConfirmationPopup.js";
+import { createOrderDetailPopup } from "./ui/orderDetailPopup.js";
+import { createOrdersScreen } from "./ui/ordersScreen.js";
 import { createPaymentSheet } from "./ui/paymentSheet.js";
 import { createPromoBanner } from "./ui/promoBanner.js";
 import { createSplashController } from "./ui/splashController.js";
@@ -81,16 +84,36 @@ const elements = {
   },
   userProfile: {
     backdrop: document.querySelector("#user-profile-backdrop"),
-    backButton: document.querySelector("#user-profile-back")
+    backButton: document.querySelector("#user-profile-back"),
+    form: document.querySelector("#user-profile-form"),
+    name: document.querySelector("#customer-name"),
+    neighborhood: document.querySelector("#customer-neighborhood"),
+    address: document.querySelector("#customer-address"),
+    reference: document.querySelector("#customer-reference")
+  },
+  ordersScreen: {
+    backdrop: document.querySelector("#orders-screen-backdrop"),
+    backButton: document.querySelector("#orders-back"),
+    tabs: [...document.querySelectorAll(".order-tab")],
+    empty: document.querySelector("#orders-empty"),
+    list: document.querySelector("#orders-list")
+  },
+  orderDetail: {
+    backdrop: document.querySelector("#order-detail-backdrop"),
+    title: document.querySelector("#order-detail-title"),
+    content: document.querySelector("#order-detail-content"),
+    closeButton: document.querySelector("#order-detail-close")
   }
 };
 
 const state = {
   banners: [],
   categorias: [],
+  pedidos: [],
   produtos: [],
   categoriaAtiva: appConfig.defaultCategoryId,
-  carrinhoItens: []
+  carrinhoItens: [],
+  pendingPayment: null
 };
 
 const splash = createSplashController({
@@ -100,6 +123,7 @@ const splash = createSplashController({
 const toast = createToast(elements.toast);
 const databaseService = createDatabaseService();
 const repository = createPizzariaRepository(databaseService);
+const customerStorage = createCustomerStorageService();
 const cartSummary = createCartSummary({
   countElement: [elements.cartCount, elements.bottomCartCount],
   buttonElement: elements.cartButton
@@ -156,6 +180,48 @@ function renderCart() {
   cartDrawer.render(state.carrinhoItens, obterTotaisCarrinho());
 }
 
+function getAllOrders() {
+  const ordersById = new Map();
+  [...customerStorage.getOrders(), ...state.pedidos]
+    .filter((order) => order.tipo === "pedido")
+    .forEach((order) => {
+      ordersById.set(order.id, order);
+    });
+  return [...ordersById.values()];
+}
+
+function openOrderConfirmation(payment) {
+  const customer = customerStorage.getCustomer();
+
+  if (!customer) {
+    state.pendingPayment = payment;
+    toast.show("Preencha seus dados para continuar o pedido.");
+    userProfileScreen.open({ mode: "checkout" });
+    return;
+  }
+
+  orderConfirmationPopup.open({
+    items: state.carrinhoItens,
+    totals: obterTotaisCarrinho(),
+    payment,
+    customer
+  });
+}
+
+function createConfirmedOrder(order) {
+  const customer = customerStorage.getCustomer();
+  return customerStorage.saveOrder({
+    clienteId: customer.id,
+    cliente: customer,
+    statusId: "recebido",
+    statusNome: "Aguardando Pizzaria aceitar",
+    criadoEm: new Date().toISOString(),
+    itens: order.items,
+    pagamento: order.payment,
+    totais: order.totals
+  });
+}
+
 function filtrarProdutos() {
   if (state.categoriaAtiva === appConfig.defaultCategoryId) {
     return state.produtos;
@@ -200,11 +266,7 @@ const itemSheet = createItemSheet({
 const paymentSheet = createPaymentSheet({
   elements: elements.paymentSheet,
   async onSubmit(payment) {
-    orderConfirmationPopup.open({
-      items: state.carrinhoItens,
-      totals: obterTotaisCarrinho(),
-      payment
-    });
+    openOrderConfirmation(payment);
   }
 });
 
@@ -214,19 +276,44 @@ const orderConfirmationPopup = createOrderConfirmationPopup({
     toast.show("Pedido ainda nao confirmado. Revise antes de finalizar.");
   },
   onConfirm(order) {
+    const savedOrder = createConfirmedOrder(order);
     state.carrinhoItens = [];
     renderCart();
+    ordersScreen.render(getAllOrders());
     cartDrawer.close();
     paymentSheet.close();
     bottomNavigation.setActive("home");
-    toast.show(`Pedido confirmado: ${order.items.length} item(ns).`);
+    toast.show(`Pedido confirmado: ${savedOrder.itens.length} item(ns).`);
   }
 });
 
 const userProfileScreen = createUserProfileScreen({
   elements: elements.userProfile,
+  storageService: customerStorage,
   onBack() {
     bottomNavigation.setActive("home");
+  },
+  onSave(customer, { mode }) {
+    toast.show("Dados do cliente salvos.");
+    if (mode === "checkout" && state.pendingPayment) {
+      const payment = state.pendingPayment;
+      state.pendingPayment = null;
+      openOrderConfirmation(payment);
+    }
+  }
+});
+
+const orderDetailPopup = createOrderDetailPopup({
+  elements: elements.orderDetail
+});
+
+const ordersScreen = createOrdersScreen({
+  elements: elements.ordersScreen,
+  onBack() {
+    bottomNavigation.setActive("home");
+  },
+  onOpenOrder(order) {
+    orderDetailPopup.open(order);
   }
 });
 
@@ -289,20 +376,30 @@ const bottomNavigation = createBottomNavigation({
   onSelect(route) {
     if (route === "home") {
       cartDrawer.close();
+      ordersScreen.close();
       userProfileScreen.close();
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
     if (route === "cart") {
+      ordersScreen.close();
       userProfileScreen.close();
       renderCart();
       cartDrawer.open();
       return;
     }
 
+    if (route === "orders") {
+      cartDrawer.close();
+      userProfileScreen.close();
+      ordersScreen.open(getAllOrders());
+      return;
+    }
+
     if (route === "user") {
       cartDrawer.close();
+      ordersScreen.close();
       userProfileScreen.open();
     }
   }
@@ -328,15 +425,17 @@ async function startApp() {
   splash.show("Carregando cardapio...");
 
   try {
-    const [banners, categorias, produtos] = await Promise.all([
+    const [banners, categorias, produtos, pedidos] = await Promise.all([
       repository.listarBanners(),
       repository.listarCategorias(),
-      repository.listarProdutos()
+      repository.listarProdutos(),
+      repository.listarPedidos()
     ]);
 
     state.banners = banners;
     state.categorias = categorias;
     state.produtos = produtos;
+    state.pedidos = pedidos;
     renderApp();
   } catch (error) {
     elements.appShell.hidden = true;

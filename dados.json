@@ -507,7 +507,125 @@
       "disponivel": true
     }
   ],
-  "clientes": [],
-  "pedidos": [],
+  "clientes": [
+    {
+      "id": "cliente-demo",
+      "nomeCompleto": "Cliente Demonstração",
+      "bairro": "Centro",
+      "endereco": "Rua das Pizzas, 123",
+      "pontoReferencia": "Proximo a praca principal"
+    }
+  ],
+  "pedidos": [
+    {
+      "id": "pedido-aguardando-demo",
+      "tipo": "pedido",
+      "clienteId": "cliente-demo",
+      "cliente": {
+        "nomeCompleto": "Cliente Demonstração",
+        "bairro": "Centro",
+        "endereco": "Rua das Pizzas, 123",
+        "pontoReferencia": "Proximo a praca principal"
+      },
+      "statusId": "recebido",
+      "statusNome": "Aguardando Pizzaria aceitar",
+      "criadoEm": "2026-06-08T13:15:00.000Z",
+      "itens": [
+        {
+          "produtoNome": "Pizza de calabresa",
+          "quantidade": 1,
+          "precoUnitario": 59,
+          "total": 59,
+          "tamanho": {
+            "nome": "Grande",
+            "fatias": 8
+          }
+        }
+      ],
+      "pagamento": {
+        "metodo": "pix",
+        "trocoPara": null
+      },
+      "totais": {
+        "subtotal": 59,
+        "deliveryFee": 6,
+        "total": 65
+      }
+    },
+    {
+      "id": "pedido-aceito-demo",
+      "tipo": "pedido",
+      "clienteId": "cliente-demo",
+      "cliente": {
+        "nomeCompleto": "Cliente Demonstração",
+        "bairro": "Centro",
+        "endereco": "Rua das Pizzas, 123",
+        "pontoReferencia": "Proximo a praca principal"
+      },
+      "statusId": "aceito",
+      "statusNome": "Pedido aceito",
+      "criadoEm": "2026-06-08T15:40:00.000Z",
+      "itens": [
+        {
+          "produtoNome": "Combo familia",
+          "quantidade": 1,
+          "precoUnitario": 74.9,
+          "total": 74.9,
+          "itensBanner": [
+            {
+              "nome": "Pizza G calabresa + refrigerante 2L",
+              "valor": 74.9
+            }
+          ]
+        }
+      ],
+      "pagamento": {
+        "metodo": "cartao",
+        "trocoPara": null
+      },
+      "totais": {
+        "subtotal": 74.9,
+        "deliveryFee": 6,
+        "total": 80.9
+      }
+    },
+    {
+      "id": "pedido-concluido-demo",
+      "tipo": "pedido",
+      "clienteId": "cliente-demo",
+      "cliente": {
+        "nomeCompleto": "Cliente Demonstração",
+        "bairro": "Centro",
+        "endereco": "Rua das Pizzas, 123",
+        "pontoReferencia": "Proximo a praca principal"
+      },
+      "statusId": "entregue",
+      "statusNome": "Pedido concluido",
+      "criadoEm": "2026-06-07T20:10:00.000Z",
+      "fechadoEm": "2026-06-07T21:05:00.000Z",
+      "itens": [
+        {
+          "produtoNome": "Pizza marguerita / Banana com canela",
+          "quantidade": 1,
+          "precoUnitario": 62,
+          "total": 62,
+          "tamanho": {
+            "nome": "Grande",
+            "fatias": 8
+          },
+          "meioAMeio": true
+        }
+      ],
+      "pagamento": {
+        "metodo": "dinheiro",
+        "trocoPara": 100
+      },
+      "totais": {
+        "subtotal": 62,
+        "deliveryFee": 6,
+        "total": 68
+      }
+    }
+  ],
   "adminAuditoria": []
 }

@@ -81,6 +81,9 @@
         <span aria-hidden="true">🛒</span>
         <strong id="bottom-cart-count" class="bottom-nav__badge">0</strong>
       </button>
+      <button class="bottom-nav__button" type="button" data-route="orders" aria-label="Pedidos">
+        <span aria-hidden="true">🧾</span>
+      </button>
       <button class="bottom-nav__button" type="button" data-route="user" aria-label="Dados do usuario">
         <span aria-hidden="true">👤</span>
       </button>
@@ -235,11 +238,81 @@
           <div>
             <strong>Perfil do cliente</strong>
             <p>
-              Esta tela fica preparada para receber nome, telefone, endereco e preferencias do
-              cliente nas proximas etapas.
+              Preencha seus dados para agilizar os pedidos. Nome, bairro e endereco sao obrigatorios.
             </p>
           </div>
         </div>
+
+        <form id="user-profile-form" class="profile-form">
+          <label class="form-field" for="customer-name">
+            Nome completo
+            <input id="customer-name" name="nomeCompleto" autocomplete="name" required />
+          </label>
+
+          <label class="form-field" for="customer-neighborhood">
+            Bairro
+            <input id="customer-neighborhood" name="bairro" required />
+          </label>
+
+          <label class="form-field" for="customer-address">
+            Endereco
+            <input id="customer-address" name="endereco" autocomplete="street-address" required />
+          </label>
+
+          <label class="form-field" for="customer-reference">
+            Ponto de referencia
+            <input id="customer-reference" name="pontoReferencia" />
+          </label>
+
+          <button class="button button--full" type="submit">Salvar dados</button>
+        </form>
+      </section>
+    </div>
+
+    <div id="orders-screen-backdrop" class="screen-backdrop" hidden>
+      <section
+        class="orders-screen"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="orders-title"
+      >
+        <header class="screen-header">
+          <button id="orders-back" class="screen-back" type="button">Voltar</button>
+          <div>
+            <p class="screen-header__eyebrow">Historico</p>
+            <h2 id="orders-title">Pedidos</h2>
+          </div>
+        </header>
+
+        <div class="order-tabs" role="tablist" aria-label="Filtro de pedidos">
+          <button id="orders-today-tab" class="order-tab is-active" type="button" data-filter="today">
+            Hoje
+          </button>
+          <button id="orders-past-tab" class="order-tab" type="button" data-filter="past">
+            Passado
+          </button>
+        </div>
+
+        <div id="orders-empty" class="cart-empty">
+          <strong>Nenhum pedido encontrado.</strong>
+          <span>Quando voce finalizar pedidos, eles aparecem aqui.</span>
+        </div>
+
+        <div id="orders-list" class="orders-list" aria-live="polite"></div>
+      </section>
+    </div>
+
+    <div id="order-detail-backdrop" class="confirmation-backdrop" hidden>
+      <section
+        class="confirmation-popup order-detail-popup"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="order-detail-title"
+      >
+        <p class="confirmation-popup__eyebrow">Detalhes do pedido</p>
+        <h2 id="order-detail-title">Pedido</h2>
+        <div id="order-detail-content" class="order-detail-content"></div>
+        <button id="order-detail-close" class="button button--full" type="button">Fechar</button>
       </section>
     </div>
 
