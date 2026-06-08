@@ -1,12 +1,16 @@
 import { formatCurrency } from "../utils/formatters.js";
 
 function formatOfferValue(value) {
-  return value > 0 ? formatCurrency(value) : "Gratis";
+  return value > 0 ? formatCurrency(value) : "Incluso";
 }
 
-function createBannerCard(banner) {
+function calculateBannerTotal(banner) {
+  return banner.produto.reduce((total, item) => total + Number(item.valor || 0), 0);
+}
+
+function createBannerCard(banner, onOrderBanner) {
   const card = document.createElement("article");
-  card.className = "promo-banner__card";
+  card.className = "promo-banner__slide";
 
   const label = document.createElement("p");
   label.className = "promo-banner__label";
@@ -36,12 +40,46 @@ function createBannerCard(banner) {
     offers.append(offer);
   });
 
-  card.append(label, title, description, offers);
+  const footer = document.createElement("div");
+  footer.className = "promo-banner__footer";
+
+  const total = document.createElement("strong");
+  total.className = "promo-banner__total";
+  total.textContent = formatCurrency(calculateBannerTotal(banner));
+
+  const button = document.createElement("button");
+  button.className = "promo-banner__button";
+  button.type = "button";
+  button.textContent = "Pedir";
+  button.addEventListener("click", () => onOrderBanner(banner));
+
+  footer.append(total, button);
+  card.append(label, title, description, offers, footer);
   return card;
 }
 
-export function createPromoBanner({ element }) {
+export function createPromoBanner({ element, onOrderBanner, intervalMs = 6500 }) {
+  let intervalId = null;
+  let activeIndex = 0;
+
+  function stopCarousel() {
+    window.clearInterval(intervalId);
+    intervalId = null;
+  }
+
+  function updateCarousel(track, dots, nextIndex) {
+    activeIndex = nextIndex;
+    track.style.transform = `translateX(-${activeIndex * 100}%)`;
+
+    dots.forEach((dot, index) => {
+      const isActive = index === activeIndex;
+      dot.classList.toggle("is-active", isActive);
+      dot.setAttribute("aria-current", isActive ? "true" : "false");
+    });
+  }
+
   function render(banners) {
+    stopCarousel();
     element.replaceChildren();
 
     const activeBanners = banners.filter((banner) => banner.ativo !== false);
@@ -51,16 +89,45 @@ export function createPromoBanner({ element }) {
     }
 
     element.hidden = false;
+    activeIndex = 0;
+
+    const viewport = document.createElement("div");
+    viewport.className = "promo-banner__viewport";
 
     const track = document.createElement("div");
-    track.className = activeBanners.length > 1 ? "promo-banner__track is-marquee" : "promo-banner__track is-single";
+    track.className = "promo-banner__track";
 
-    const bannersToRender = activeBanners.length > 1 ? [...activeBanners, ...activeBanners] : activeBanners;
-    bannersToRender.forEach((banner) => {
-      track.append(createBannerCard(banner));
+    activeBanners.forEach((banner) => {
+      track.append(createBannerCard(banner, onOrderBanner));
     });
 
-    element.append(track);
+    viewport.append(track);
+    element.append(viewport);
+
+    const dots = activeBanners.map((banner, index) => {
+      const dot = document.createElement("button");
+      dot.className = "promo-banner__dot";
+      dot.type = "button";
+      dot.setAttribute("aria-label", `Ver ${banner.titulo}`);
+      dot.addEventListener("click", () => {
+        stopCarousel();
+        updateCarousel(track, dots, index);
+      });
+      return dot;
+    });
+
+    if (dots.length > 1) {
+      const controls = document.createElement("div");
+      controls.className = "promo-banner__dots";
+      dots.forEach((dot) => controls.append(dot));
+      element.append(controls);
+
+      intervalId = window.setInterval(() => {
+        updateCarousel(track, dots, (activeIndex + 1) % activeBanners.length);
+      }, intervalMs);
+    }
+
+    updateCarousel(track, dots, 0);
   }
 
   return {

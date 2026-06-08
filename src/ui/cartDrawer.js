@@ -38,6 +38,9 @@ export function createCartDrawer({
     const meta = document.createElement("p");
     meta.className = "cart-item__meta";
     const metaParts = [];
+    if (item.itensBanner?.length) {
+      metaParts.push(`Combo: ${item.itensBanner.map((bannerItem) => bannerItem.nome).join(" + ")}`);
+    }
     if (item.tamanho) {
       metaParts.push(`${item.tamanho.nome}${item.tamanho.fatias ? ` (${item.tamanho.fatias} fatias)` : ""}`);
     }
