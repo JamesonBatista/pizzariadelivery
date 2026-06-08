@@ -278,6 +278,52 @@
       </section>
     </div>
 
+    <div id="order-confirmation-backdrop" class="confirmation-backdrop" hidden>
+      <section
+        class="confirmation-popup"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="order-confirmation-title"
+      >
+        <p class="confirmation-popup__eyebrow">Confirmacao do pedido</p>
+        <h2 id="order-confirmation-title">Deseja efetuar este pedido?</h2>
+        <p class="confirmation-popup__text">
+          Confira os itens, forma de pagamento e valor total antes de confirmar.
+        </p>
+
+        <div id="order-confirmation-items" class="confirmation-items"></div>
+
+        <div class="confirmation-payment">
+          <span>Pagamento</span>
+          <strong id="order-confirmation-payment"></strong>
+        </div>
+
+        <div class="confirmation-totals">
+          <div>
+            <span>Subtotal</span>
+            <strong id="order-confirmation-subtotal"></strong>
+          </div>
+          <div>
+            <span>Taxa de entrega</span>
+            <strong id="order-confirmation-delivery"></strong>
+          </div>
+          <div class="confirmation-totals__grand">
+            <span>Total</span>
+            <strong id="order-confirmation-total"></strong>
+          </div>
+        </div>
+
+        <div class="confirmation-actions">
+          <button id="order-confirmation-cancel" class="button button--ghost" type="button">
+            Revisar
+          </button>
+          <button id="order-confirmation-confirm" class="button" type="button">
+            Confirmar pedido
+          </button>
+        </div>
+      </section>
+    </div>
+
     <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
     <script type="module" src="./src/main.js"></script>

@@ -54,8 +54,8 @@ export function createPaymentSheet({ elements, onSubmit }) {
       trocoPara: method === "dinheiro" ? Number(elements.cashChange.value || 0) : null
     };
 
-    await onSubmit(payload);
     close();
+    await onSubmit(payload);
   });
 
   document.addEventListener("keydown", (event) => {

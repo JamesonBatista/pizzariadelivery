@@ -8,6 +8,7 @@ import { createCartDrawer } from "./ui/cartDrawer.js";
 import { createCartSummary } from "./ui/cartSummary.js";
 import { createItemSheet } from "./ui/itemSheet.js";
 import { createMenuView } from "./ui/menuView.js";
+import { createOrderConfirmationPopup } from "./ui/orderConfirmationPopup.js";
 import { createPaymentSheet } from "./ui/paymentSheet.js";
 import { createSplashController } from "./ui/splashController.js";
 import { createToast } from "./ui/toast.js";
@@ -58,6 +59,16 @@ const elements = {
     form: document.querySelector("#payment-form"),
     cashChangeField: document.querySelector("#cash-change-field"),
     cashChange: document.querySelector("#cash-change")
+  },
+  orderConfirmation: {
+    backdrop: document.querySelector("#order-confirmation-backdrop"),
+    items: document.querySelector("#order-confirmation-items"),
+    payment: document.querySelector("#order-confirmation-payment"),
+    subtotal: document.querySelector("#order-confirmation-subtotal"),
+    delivery: document.querySelector("#order-confirmation-delivery"),
+    total: document.querySelector("#order-confirmation-total"),
+    cancelButton: document.querySelector("#order-confirmation-cancel"),
+    confirmButton: document.querySelector("#order-confirmation-confirm")
   },
   userProfile: {
     backdrop: document.querySelector("#user-profile-backdrop"),
@@ -145,11 +156,26 @@ const itemSheet = createItemSheet({
 const paymentSheet = createPaymentSheet({
   elements: elements.paymentSheet,
   async onSubmit(payment) {
-    toast.show(
-      payment.metodo === "dinheiro"
-        ? `Pagamento em dinheiro selecionado. Troco para ${payment.trocoPara}.`
-        : "Forma de pagamento selecionada."
-    );
+    orderConfirmationPopup.open({
+      items: state.carrinhoItens,
+      totals: obterTotaisCarrinho(),
+      payment
+    });
+  }
+});
+
+const orderConfirmationPopup = createOrderConfirmationPopup({
+  elements: elements.orderConfirmation,
+  onCancel() {
+    toast.show("Pedido ainda nao confirmado. Revise antes de finalizar.");
+  },
+  onConfirm(order) {
+    state.carrinhoItens = [];
+    renderCart();
+    cartDrawer.close();
+    paymentSheet.close();
+    bottomNavigation.setActive("home");
+    toast.show(`Pedido confirmado: ${order.items.length} item(ns).`);
   }
 });
 
