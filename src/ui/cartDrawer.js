@@ -37,9 +37,20 @@ export function createCartDrawer({
 
     const meta = document.createElement("p");
     meta.className = "cart-item__meta";
-    meta.textContent = item.recheioExtra
-      ? `Com recheio extra (${formatCurrency(item.valorRecheioExtra)} por unidade)`
-      : "Sem recheio extra";
+    const metaParts = [];
+    if (item.tamanho) {
+      metaParts.push(`${item.tamanho.nome}${item.tamanho.fatias ? ` (${item.tamanho.fatias} fatias)` : ""}`);
+    }
+    if (item.meioAMeio) {
+      metaParts.push("Meio a meio");
+    }
+    if (item.recheioExtra) {
+      metaParts.push(`Recheio extra (${formatCurrency(item.valorRecheioExtra)} por unidade)`);
+    }
+    if (item.ingredientesEmDobro?.length) {
+      metaParts.push(`Em dobro: ${item.ingredientesEmDobro.map((ingredient) => ingredient.nome).join(", ")}`);
+    }
+    meta.textContent = metaParts.length ? metaParts.join(" • ") : "Sem adicionais";
 
     const note = document.createElement("p");
     note.className = "cart-item__note";

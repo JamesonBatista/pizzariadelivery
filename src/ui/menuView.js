@@ -1,5 +1,4 @@
 import { appConfig } from "../config/appConfig.js";
-import { formatCurrency } from "../utils/formatters.js";
 
 function createCategoryMap(categories) {
   return new Map(categories.map((category) => [category.id, category.nome]));
@@ -60,6 +59,9 @@ export function createMenuView({ categoryListElement, productListElement, onCate
     products.forEach((product) => {
       const card = document.createElement("article");
       card.className = "product-card";
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", `Quero ${product.nome}`);
 
       const image = document.createElement("img");
       image.className = "product-card__image";
@@ -85,17 +87,24 @@ export function createMenuView({ categoryListElement, productListElement, onCate
       const footer = document.createElement("div");
       footer.className = "product-card__footer";
 
-      const price = document.createElement("strong");
-      price.className = "product-card__price";
-      price.textContent = formatCurrency(product.preco);
-
       const addButton = document.createElement("button");
       addButton.type = "button";
       addButton.className = "product-card__add";
-      addButton.textContent = "Adicionar";
-      addButton.addEventListener("click", () => onAddProduct(product));
+      addButton.textContent = "Quero";
+      addButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        onAddProduct(product);
+      });
 
-      footer.append(price, addButton);
+      card.addEventListener("click", () => onAddProduct(product));
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onAddProduct(product);
+        }
+      });
+
+      footer.append(addButton);
       body.append(category, title, description, footer);
       card.append(image, body);
       fragment.append(card);

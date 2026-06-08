@@ -22,7 +22,20 @@ export function createOrderConfirmationPopup({ elements, onCancel, onConfirm }) 
       const name = document.createElement("strong");
       name.textContent = `${item.quantidade}x ${item.produtoNome}`;
       const meta = document.createElement("span");
-      meta.textContent = item.recheioExtra ? "Com recheio extra" : "Sem recheio extra";
+      const metaParts = [];
+      if (item.tamanho) {
+        metaParts.push(item.tamanho.nome);
+      }
+      if (item.meioAMeio) {
+        metaParts.push("Meio a meio");
+      }
+      if (item.ingredientesEmDobro?.length) {
+        metaParts.push(`Em dobro: ${item.ingredientesEmDobro.map((ingredient) => ingredient.nome).join(", ")}`);
+      }
+      if (item.recheioExtra) {
+        metaParts.push("Recheio extra");
+      }
+      meta.textContent = metaParts.length ? metaParts.join(" • ") : "Sem adicionais";
       details.append(name, meta);
 
       const value = document.createElement("strong");

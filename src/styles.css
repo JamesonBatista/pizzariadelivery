@@ -419,6 +419,81 @@ img {
   font-weight: 800;
 }
 
+.promo-banner {
+  margin: -4px 0 22px;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 88% 22%, rgba(255, 209, 102, 0.5), transparent 10rem),
+    linear-gradient(135deg, #211816 0%, #9f1f1f 58%, #c62828 100%);
+  color: #fff;
+  box-shadow: 0 18px 50px rgba(89, 35, 21, 0.18);
+}
+
+.promo-banner__content {
+  padding: 22px;
+}
+
+.promo-banner__label {
+  display: inline-flex;
+  margin: 0 0 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 209, 102, 0.18);
+  color: #ffd166;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.promo-banner h2 {
+  margin: 0;
+  font-size: clamp(1.7rem, 8vw, 3rem);
+  line-height: 0.95;
+}
+
+.promo-banner__description {
+  max-width: 520px;
+  margin: 10px 0 18px;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.promo-banner__track {
+  display: flex;
+  gap: 12px;
+}
+
+.promo-banner__track.is-single .promo-banner__offer {
+  animation: offerPulse 1.8s ease-in-out infinite;
+}
+
+.promo-banner__track.is-marquee {
+  width: max-content;
+  animation: offerMarquee 14s linear infinite;
+}
+
+.promo-banner__offer {
+  min-width: 210px;
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.promo-banner__offer strong {
+  font-size: 0.98rem;
+}
+
+.promo-banner__offer span {
+  color: #ffd166;
+  font-size: 1.32rem;
+  font-weight: 1000;
+}
+
 .menu-section {
   padding: 20px 0;
 }
@@ -498,6 +573,17 @@ img {
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.82);
   box-shadow: 0 14px 34px rgba(89, 35, 21, 0.08);
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.product-card:hover,
+.product-card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 42px rgba(89, 35, 21, 0.13);
+  outline: none;
 }
 
 .product-card__image {
@@ -539,7 +625,7 @@ img {
 .product-card__footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 12px;
   margin-top: auto;
 }
@@ -928,6 +1014,7 @@ img {
   margin-top: 18px;
 }
 
+.option-group,
 .form-row,
 .checkbox-row,
 .form-field {
@@ -935,6 +1022,70 @@ img {
   gap: 8px;
   color: var(--color-ink);
   font-weight: 800;
+}
+
+.option-group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.option-group legend {
+  margin-bottom: 8px;
+  font-weight: 1000;
+}
+
+.size-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.size-option,
+.ingredient-option {
+  display: grid;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 18px;
+  background: #fffaf7;
+}
+
+.size-option {
+  grid-template-columns: auto 1fr;
+}
+
+.size-option input,
+.ingredient-option input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-brand);
+}
+
+.size-option span {
+  display: grid;
+  gap: 3px;
+}
+
+.size-option small,
+.helper-text {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.ingredient-options {
+  display: grid;
+  gap: 8px;
+}
+
+.ingredient-option {
+  grid-template-columns: auto 1fr auto;
+}
+
+.ingredient-option strong {
+  color: var(--color-brand);
 }
 
 .form-row {
@@ -1002,7 +1153,8 @@ img {
   background: #fffaf7;
 }
 
-.form-field input {
+.form-field input,
+.form-field select {
   width: 100%;
   min-height: 48px;
   padding: 0 14px;
@@ -1018,7 +1170,8 @@ img {
   box-shadow: 0 0 0 4px rgba(198, 40, 40, 0.1);
 }
 
-.form-field input:focus {
+.form-field input:focus,
+.form-field select:focus {
   border-color: var(--color-brand);
   box-shadow: 0 0 0 4px rgba(198, 40, 40, 0.1);
 }
@@ -1250,6 +1403,23 @@ img {
   100% {
     transform: translate3d(22px, calc(100vh + 120px), 0) rotate(420deg);
     opacity: 0;
+  }
+}
+
+@keyframes offerPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.035);
+  }
+}
+
+@keyframes offerMarquee {
+  to {
+    transform: translateX(calc(-50% - 6px));
   }
 }
 

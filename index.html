@@ -67,6 +67,8 @@
         </div>
       </header>
 
+      <section id="promo-banner" class="promo-banner" aria-label="Anuncios da pizzaria"></section>
+
       <section class="menu-section" aria-labelledby="menu-title">
         <div class="section-heading">
           <div>
@@ -118,6 +120,31 @@
         </div>
 
         <form id="item-form" class="item-form">
+          <fieldset class="option-group">
+            <legend>Escolha o tamanho</legend>
+            <div id="size-options" class="size-options"></div>
+          </fieldset>
+
+          <fieldset id="half-and-half-group" class="option-group">
+            <legend>Montagem meio a meio</legend>
+            <label class="checkbox-row">
+              <input id="half-and-half" type="checkbox" />
+              <span>Quero escolher dois sabores</span>
+            </label>
+            <label id="second-flavor-field" class="form-field" for="second-flavor" hidden>
+              Segundo sabor
+              <select id="second-flavor"></select>
+            </label>
+            <small class="helper-text">
+              Regra atual: o valor do meio a meio usa o maior preco entre os sabores no tamanho escolhido.
+            </small>
+          </fieldset>
+
+          <fieldset id="double-ingredients-group" class="option-group">
+            <legend>Ingredientes em dobro</legend>
+            <div id="double-ingredients" class="ingredient-options"></div>
+          </fieldset>
+
           <div class="form-row">
             <label for="quantity-value">Quantidade</label>
             <div class="quantity-control">
