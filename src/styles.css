@@ -194,8 +194,7 @@ img {
 }
 
 .splash__eyebrow,
-.section-heading__eyebrow,
-.hero__eyebrow {
+.section-heading__eyebrow {
   margin: 0 0 8px;
   color: #ffd166;
   font-size: 0.78rem;
@@ -372,66 +371,10 @@ img {
   font-size: 0.86rem;
 }
 
-.hero {
-  min-height: 230px;
-  display: flex;
-  align-items: flex-end;
-  margin-bottom: 22px;
-  padding: 28px;
-  border-radius: var(--radius-large);
-  background:
-    radial-gradient(circle at 84% 22%, rgba(255, 209, 102, 0.28), transparent 8rem),
-    linear-gradient(120deg, rgba(33, 24, 22, 0.88), rgba(198, 40, 40, 0.78)),
-    url("../assets/images/pizza-salgada.svg") right -30px bottom -42px / min(64%, 360px) no-repeat,
-    #c62828;
-  color: #fff;
-  box-shadow: var(--shadow-soft);
-}
-
-.hero h1 {
-  max-width: 620px;
-  margin: 0;
-  font-size: clamp(2.25rem, 12vw, 4.8rem);
-  line-height: 0.92;
-}
-
-.hero__text {
-  max-width: 580px;
-  margin: 16px 0 0;
-  color: rgba(255, 255, 255, 0.84);
-  font-size: 1rem;
-}
-
-.hero__badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 18px;
-}
-
-.hero__badges span {
-  padding: 8px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff8e6;
-  font-size: 0.78rem;
-  font-weight: 800;
-}
-
 .promo-banner {
-  margin: -4px 0 22px;
+  margin: 10px 0 22px;
   overflow: hidden;
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at 88% 22%, rgba(255, 209, 102, 0.5), transparent 10rem),
-    linear-gradient(135deg, #211816 0%, #9f1f1f 58%, #c62828 100%);
-  color: #fff;
-  box-shadow: 0 18px 50px rgba(89, 35, 21, 0.18);
-}
-
-.promo-banner__content {
-  padding: 22px;
+  border-radius: 30px;
 }
 
 .promo-banner__label {
@@ -455,29 +398,48 @@ img {
 
 .promo-banner__description {
   max-width: 520px;
-  margin: 10px 0 18px;
+  margin: 10px 0 16px;
   color: rgba(255, 255, 255, 0.82);
 }
 
 .promo-banner__track {
   display: flex;
-  gap: 12px;
+  gap: 14px;
 }
 
-.promo-banner__track.is-single .promo-banner__offer {
-  animation: offerPulse 1.8s ease-in-out infinite;
+.promo-banner__track.is-single .promo-banner__card {
+  animation: offerPulse 2.8s ease-in-out infinite;
 }
 
 .promo-banner__track.is-marquee {
   width: max-content;
-  animation: offerMarquee 14s linear infinite;
+  animation: offerMarquee 36s linear infinite;
+}
+
+.promo-banner__card {
+  width: min(82vw, 520px);
+  min-height: 210px;
+  flex: 0 0 min(82vw, 520px);
+  padding: 22px;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 88% 22%, rgba(255, 209, 102, 0.5), transparent 10rem),
+    linear-gradient(135deg, #211816 0%, #9f1f1f 58%, #c62828 100%);
+  color: #fff;
+  box-shadow: 0 18px 50px rgba(89, 35, 21, 0.18);
+}
+
+.promo-banner__offers {
+  display: grid;
+  gap: 10px;
 }
 
 .promo-banner__offer {
-  min-width: 210px;
-  display: grid;
-  gap: 4px;
-  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 14px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.12);
@@ -486,9 +448,11 @@ img {
 
 .promo-banner__offer strong {
   font-size: 0.98rem;
+  line-height: 1.2;
 }
 
 .promo-banner__offer span {
+  flex: 0 0 auto;
   color: #ffd166;
   font-size: 1.32rem;
   font-weight: 1000;
@@ -1439,21 +1403,6 @@ img {
   }
 }
 
-@media (orientation: portrait) and (max-width: 719px) {
-  .hero {
-    min-height: 280px;
-    background:
-      radial-gradient(circle at 78% 20%, rgba(255, 209, 102, 0.3), transparent 8rem),
-      linear-gradient(145deg, rgba(33, 24, 22, 0.88), rgba(198, 40, 40, 0.78)),
-      url("../assets/images/pizza-salgada.svg") right -68px bottom -28px / 260px no-repeat,
-      #c62828;
-  }
-
-  .hero h1 {
-    max-width: 330px;
-  }
-}
-
 @media (orientation: landscape) and (max-height: 560px) {
   .app {
     padding-bottom: calc(52px + var(--bottom-nav-height) + var(--safe-bottom));
@@ -1462,31 +1411,6 @@ img {
   .top-bar {
     position: static;
     margin-bottom: 12px;
-  }
-
-  .hero {
-    min-height: 190px;
-    align-items: center;
-    padding: 22px;
-    background:
-      radial-gradient(circle at 88% 48%, rgba(255, 209, 102, 0.3), transparent 7rem),
-      linear-gradient(100deg, rgba(33, 24, 22, 0.92), rgba(198, 40, 40, 0.74)),
-      url("../assets/images/pizza-salgada.svg") right -18px center / 230px no-repeat,
-      #c62828;
-  }
-
-  .hero h1 {
-    max-width: 520px;
-    font-size: clamp(2rem, 7vw, 3.4rem);
-  }
-
-  .hero__text {
-    max-width: 520px;
-    margin-top: 10px;
-  }
-
-  .hero__badges {
-    margin-top: 12px;
   }
 
   .sheet {
@@ -1527,11 +1451,6 @@ img {
     margin: -28px -24px 22px;
     padding-right: 24px;
     padding-left: 24px;
-  }
-
-  .hero {
-    min-height: 320px;
-    padding: 42px;
   }
 
   .product-grid {

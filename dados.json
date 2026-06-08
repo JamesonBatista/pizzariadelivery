@@ -127,20 +127,64 @@
     {
       "id": "promocao-do-dia",
       "titulo": "Promocao do dia",
-      "descricao": "Oferta especial para pedir agora",
+      "descricao": "Pizza grande com preco especial",
       "modo": "auto",
       "produto": [
         {
           "item": "Pizza G calabresa",
           "valor": 59
+        }
+      ]
+    },
+    {
+      "id": "combo-familia",
+      "titulo": "Combo familia",
+      "descricao": "Perfeito para dividir",
+      "modo": "auto",
+      "produto": [
+        {
+          "item": "Pizza G calabresa + refrigerante 2L",
+          "valor": 74.9
+        }
+      ]
+    },
+    {
+      "id": "combo-doce",
+      "titulo": "Combo doce",
+      "descricao": "Salgada e doce no mesmo pedido",
+      "modo": "auto",
+      "produto": [
+        {
+          "item": "Pizza M calabresa + Pizza P chocolate",
+          "valor": 89.9
+        }
+      ]
+    },
+    {
+      "id": "combo-casal",
+      "titulo": "Combo casal",
+      "descricao": "Duas pizzas medias com desconto",
+      "modo": "auto",
+      "produto": [
+        {
+          "item": "Pizza M marguerita + Pizza M banana",
+          "valor": 84.9
         },
         {
-          "item": "Pizza G marguerita",
-          "valor": 62
-        },
+          "item": "Refrigerante lata",
+          "valor": 0
+        }
+      ]
+    },
+    {
+      "id": "bebidas-geladas",
+      "titulo": "Bebidas geladas",
+      "descricao": "Complete seu pedido",
+      "modo": "auto",
+      "produto": [
         {
-          "item": "Frango com catupiry G",
-          "valor": 65
+          "item": "Refrigerante 2L",
+          "valor": 12.9
         }
       ]
     }
