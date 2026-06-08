@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-labelledby="title desc">
+  <title id="title">Sobremesa</title>
+  <desc id="desc">Ilustracao simples de uma sobremesa.</desc>
+  <rect width="320" height="220" rx="28" fill="#f7efff"/>
+  <path d="M92 104h136l-14 64H106z" fill="#9a5bd6"/>
+  <path d="M108 82h104c8 0 14 6 14 14v8H94v-8c0-8 6-14 14-14z" fill="#f7cf62"/>
+  <path d="M124 82c0-24 18-44 40-44s40 20 40 44z" fill="#fff7d6"/>
+  <circle cx="146" cy="70" r="8" fill="#d7475d"/>
+  <circle cx="176" cy="58" r="8" fill="#d7475d"/>
+  <path d="M118 124h84" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".55"/>
+</svg>

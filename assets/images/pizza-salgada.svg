@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-labelledby="title desc">
+  <title id="title">Pizza salgada</title>
+  <desc id="desc">Ilustracao simples de uma pizza salgada.</desc>
+  <rect width="320" height="220" rx="28" fill="#fff4de"/>
+  <circle cx="160" cy="116" r="78" fill="#e29a38"/>
+  <circle cx="160" cy="116" r="63" fill="#ffd36f"/>
+  <circle cx="125" cy="88" r="12" fill="#c84934"/>
+  <circle cx="178" cy="78" r="12" fill="#c84934"/>
+  <circle cx="194" cy="132" r="12" fill="#c84934"/>
+  <circle cx="136" cy="144" r="12" fill="#c84934"/>
+  <path d="M110 120c34-16 68-16 102 0" fill="none" stroke="#fbf0ca" stroke-width="10" stroke-linecap="round"/>
+  <path d="M92 116a68 68 0 0 1 136 0" fill="none" stroke="#7d4a24" stroke-width="5" stroke-linecap="round" opacity=".18"/>
+</svg>
