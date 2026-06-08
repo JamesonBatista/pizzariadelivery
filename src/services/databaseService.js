@@ -13,6 +13,9 @@ function createFirestoreService() {
     async postDocument() {
       throw new Error(`Conexao ${connection.type} criada, mas o SDK do Firestore ainda nao foi ligado.`);
     },
+    async updateDocument() {
+      throw new Error(`Conexao ${connection.type} criada, mas o SDK do Firestore ainda nao foi ligado.`);
+    },
     async deleteDocument() {
       throw new Error(`Conexao ${connection.type} criada, mas o SDK do Firestore ainda nao foi ligado.`);
     }

@@ -56,6 +56,32 @@ export function createFakeFirestoreClient({ jsonPath, latencyMs }) {
     return clone(newDocument);
   }
 
+  async function updateDocument(collectionName, documentId, updates) {
+    const database = await loadDatabase();
+    await wait(latencyMs.post);
+
+    if (!Array.isArray(database[collectionName])) {
+      database[collectionName] = [];
+    }
+
+    const collection = database[collectionName];
+    const documentIndex = collection.findIndex((document) => document.id === documentId);
+    const updatedDocument = {
+      ...(documentIndex >= 0 ? collection[documentIndex] : { id: documentId }),
+      ...updates,
+      id: documentId,
+      atualizadoEm: new Date().toISOString()
+    };
+
+    if (documentIndex >= 0) {
+      collection[documentIndex] = updatedDocument;
+    } else {
+      collection.push(updatedDocument);
+    }
+
+    return clone(updatedDocument);
+  }
+
   async function deleteDocument(collectionName, documentId) {
     const database = await loadDatabase();
     await wait(latencyMs.delete);
@@ -73,6 +99,7 @@ export function createFakeFirestoreClient({ jsonPath, latencyMs }) {
   return {
     getCollection,
     postDocument,
+    updateDocument,
     deleteDocument
   };
 }

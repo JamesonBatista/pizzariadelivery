@@ -5,6 +5,106 @@
     "fonte": "json-local",
     "atualizadoEm": "2026-06-08"
   },
+  "admin": {
+    "enabled": false,
+    "roles": [
+      "owner",
+      "manager",
+      "attendant"
+    ],
+    "managedCollections": [
+      "banner",
+      "categorias",
+      "produtos",
+      "clientes",
+      "pedidos",
+      "configuracoes",
+      "whatsappTemplates",
+      "statusPedidos",
+      "adminAuditoria"
+    ]
+  },
+  "configuracoes": [
+    {
+      "id": "delivery",
+      "label": "Entrega",
+      "taxaPadrao": 6,
+      "tempoEstimadoMinutos": {
+        "min": 40,
+        "max": 60
+      },
+      "retiradaDisponivel": true,
+      "entregaDisponivel": true
+    },
+    {
+      "id": "banner",
+      "label": "Banner principal",
+      "ativo": true,
+      "modoPadrao": "auto",
+      "velocidadeMs": 14000
+    },
+    {
+      "id": "whatsapp",
+      "label": "WhatsApp",
+      "enabled": false,
+      "provider": "pending",
+      "adminPhone": ""
+    }
+  ],
+  "statusPedidos": [
+    {
+      "id": "recebido",
+      "nome": "Pedido recebido",
+      "notificarCliente": false
+    },
+    {
+      "id": "aceito",
+      "nome": "Pedido aceito",
+      "notificarCliente": true,
+      "whatsappTemplateId": "orderAccepted"
+    },
+    {
+      "id": "preparo",
+      "nome": "Em preparo",
+      "notificarCliente": false
+    },
+    {
+      "id": "saiu-entrega",
+      "nome": "Saiu para entrega",
+      "notificarCliente": true,
+      "whatsappTemplateId": "outForDelivery"
+    },
+    {
+      "id": "entregue",
+      "nome": "Entregue",
+      "notificarCliente": false
+    },
+    {
+      "id": "cancelado",
+      "nome": "Cancelado",
+      "notificarCliente": false
+    }
+  ],
+  "whatsappTemplates": [
+    {
+      "id": "orderAccepted",
+      "label": "Pedido aceito",
+      "message": "Ola, {clienteNome}! Seu pedido #{pedidoId} foi aceito pela pizzaria. Total: {pedidoTotal}.",
+      "enabled": true
+    },
+    {
+      "id": "outForDelivery",
+      "label": "Saiu para entrega",
+      "message": "Ola, {clienteNome}! Seu pedido #{pedidoId} saiu para entrega. Em breve chegara ate voce.",
+      "enabled": true
+    },
+    {
+      "id": "customerContact",
+      "label": "Contato com cliente",
+      "message": "Ola, {clienteNome}! Precisamos falar com voce sobre o pedido #{pedidoId}.",
+      "enabled": true
+    }
+  ],
   "categorias": [
     {
       "id": "pizza-salgada",
@@ -364,5 +464,6 @@
     }
   ],
   "clientes": [],
-  "pedidos": []
+  "pedidos": [],
+  "adminAuditoria": []
 }

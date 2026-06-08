@@ -4,9 +4,17 @@ function applyTemplate(template, variables) {
   return template.replace(/\{(\w+)\}/g, (_, key) => variables[key] ?? "");
 }
 
+function resolveTemplate(templates, templateId) {
+  if (Array.isArray(templates)) {
+    return templates.find((template) => template.id === templateId);
+  }
+
+  return templates[templateId];
+}
+
 export function createWhatsappService(config = whatsappConfig) {
   function buildMessage(templateId, variables = {}) {
-    const template = config.templates[templateId];
+    const template = resolveTemplate(config.templates, templateId);
 
     if (!template) {
       throw new Error(`Template de WhatsApp nao encontrado: ${templateId}`);
