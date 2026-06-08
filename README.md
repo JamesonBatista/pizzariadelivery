@@ -13,7 +13,7 @@ Aplicacao estatica para cardapio de pizzaria, preparada como Web App mobile/iOS 
 - `src/services/whatsappService.js`: prepara mensagens de WhatsApp sem enviar enquanto o provider nao for conectado.
 - `src/services/orderNotificationService.js`: centraliza notificacoes futuras de pedido aceito, saiu para entrega e contato com cliente.
 - `manifest.json`, `service-worker.js` e `assets/icons/pizza-icon.svg`: configuracao de Web App para mobile/iOS.
-- `src/ui/`: componentes visuais separados por responsabilidade, incluindo cardapio, barra inferior, carrinho, usuario e pagamento.
+- `src/ui/`: componentes visuais separados por responsabilidade, incluindo cardapio, barra inferior, carrinho, usuario, pagamento e confirmacao do pedido.
 
 ## Como rodar localmente
 
