@@ -961,10 +961,140 @@ img {
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.74);
   color: var(--color-muted);
+  overflow: hidden;
 }
 
 .cart-empty strong {
   color: var(--color-ink);
+}
+
+.pizza-mascot {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.pizza-mascot--empty,
+.pizza-mascot--success {
+  width: 122px;
+  height: 92px;
+  margin: 0 auto 8px;
+}
+
+.pizza-mascot--success {
+  width: 148px;
+  height: 116px;
+}
+
+.pizza-mascot--mini {
+  width: 66px;
+  height: 54px;
+}
+
+.pizza-mascot__oven {
+  position: absolute;
+  left: 14px;
+  bottom: 4px;
+  width: 76px;
+  height: 50px;
+  border: 5px solid #6d3320;
+  border-radius: 42px 42px 16px 16px;
+  background:
+    radial-gradient(circle at 50% 75%, #ffb43a 0 13px, #d93b24 14px 23px, transparent 24px),
+    linear-gradient(180deg, #7f3f28, #4b2118);
+  box-shadow:
+    0 12px 26px rgba(89, 35, 21, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.12);
+}
+
+.pizza-mascot__chef {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 46px;
+  height: 58px;
+  border-radius: 18px 18px 22px 22px;
+  background:
+    radial-gradient(circle at 34% 48%, #4b2118 0 3px, transparent 4px),
+    radial-gradient(circle at 66% 48%, #4b2118 0 3px, transparent 4px),
+    radial-gradient(circle at 50% 62%, #c45a45 0 4px, transparent 5px),
+    linear-gradient(180deg, #ffe2bd 0 60%, #fff 61% 100%);
+  box-shadow: 0 10px 22px rgba(89, 35, 21, 0.14);
+}
+
+.pizza-mascot__chef::before {
+  position: absolute;
+  left: 50%;
+  top: -18px;
+  width: 52px;
+  height: 28px;
+  border-radius: 999px 999px 18px 18px;
+  background:
+    radial-gradient(circle at 18% 45%, #fff 0 12px, transparent 13px),
+    radial-gradient(circle at 50% 28%, #fff 0 15px, transparent 16px),
+    radial-gradient(circle at 80% 48%, #fff 0 12px, transparent 13px),
+    #fff;
+  content: "";
+  transform: translateX(-50%);
+}
+
+.pizza-mascot__chef::after {
+  position: absolute;
+  left: 50%;
+  bottom: -14px;
+  width: 60px;
+  height: 26px;
+  border-radius: 18px;
+  background: #fff;
+  content: "";
+  transform: translateX(-50%);
+  box-shadow: inset 0 -4px 0 #f1ded6;
+}
+
+.pizza-mascot__steam {
+  position: absolute;
+  bottom: 62px;
+  width: 8px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  animation: steamRise 1.8s ease-in-out infinite;
+}
+
+.pizza-mascot__steam--one {
+  left: 32px;
+}
+
+.pizza-mascot__steam--two {
+  left: 54px;
+  animation-delay: 0.34s;
+}
+
+.pizza-mascot--mini .pizza-mascot__oven {
+  left: 2px;
+  width: 44px;
+  height: 30px;
+  border-width: 3px;
+}
+
+.pizza-mascot--mini .pizza-mascot__chef {
+  right: 0;
+  top: 6px;
+  width: 27px;
+  height: 34px;
+  border-radius: 12px;
+}
+
+.pizza-mascot--mini .pizza-mascot__chef::before {
+  top: -11px;
+  width: 32px;
+  height: 18px;
+}
+
+.pizza-mascot--mini .pizza-mascot__chef::after {
+  bottom: -8px;
+  width: 36px;
+  height: 16px;
 }
 
 .cart-items {
@@ -1137,6 +1267,7 @@ img {
 }
 
 .order-card {
+  position: relative;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
@@ -1147,6 +1278,21 @@ img {
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 12px 28px rgba(89, 35, 21, 0.08);
   cursor: pointer;
+}
+
+.order-card__mascot {
+  position: absolute;
+  right: 12px;
+  top: -12px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #dcfce7;
+  box-shadow: 0 10px 22px rgba(34, 197, 94, 0.2);
+  font-size: 1rem;
 }
 
 .order-card div {
@@ -1221,6 +1367,36 @@ img {
   border-radius: 14px;
   background: #fff;
   font-weight: 900;
+}
+
+.order-detail-callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ecfdf5, #fff);
+}
+
+.order-detail-callout strong,
+.order-detail-callout p {
+  margin: 0;
+}
+
+.order-detail-callout strong {
+  color: #15803d;
+}
+
+.order-detail-callout p {
+  color: var(--color-muted);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.order-success-popup {
+  text-align: center;
 }
 
 .sheet {
@@ -1784,6 +1960,23 @@ img {
     box-shadow:
       0 0 0 5px rgba(255, 255, 255, 0.82),
       0 0 0 8px rgba(34, 197, 94, 0);
+  }
+}
+
+@keyframes steamRise {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(8px) scaleY(0.72);
+  }
+
+  45% {
+    opacity: 0.78;
+  }
+
+  80% {
+    opacity: 0;
+    transform: translateY(-14px) scaleY(1.05);
   }
 }
 

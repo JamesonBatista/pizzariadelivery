@@ -24,6 +24,10 @@ function formatFullDateTime(value) {
   }).format(value ? new Date(value) : new Date());
 }
 
+function isAcceptedOrder(statusId) {
+  return statusId === "aceito" || statusId === "preparo" || statusId === "saiu-entrega";
+}
+
 export function createOrderDetailPopup({ elements }) {
   let lastFocusedElement = null;
 
@@ -32,6 +36,23 @@ export function createOrderDetailPopup({ elements }) {
     elements.content.replaceChildren();
 
     const customer = order.cliente || {};
+
+    if (isAcceptedOrder(order.statusId)) {
+      const acceptedCallout = document.createElement("section");
+      acceptedCallout.className = "order-detail-callout";
+      acceptedCallout.innerHTML = `
+        <span class="pizza-mascot pizza-mascot--mini" aria-hidden="true">
+          <span class="pizza-mascot__chef"></span>
+          <span class="pizza-mascot__oven"></span>
+        </span>
+        <div>
+          <strong>Forno aceso!</strong>
+          <p>A pizzaria aceitou seu pedido e a equipe ja esta cuidando dele.</p>
+        </div>
+      `;
+      elements.content.append(acceptedCallout);
+    }
+
     const sections = [
       [
         "Pedido",

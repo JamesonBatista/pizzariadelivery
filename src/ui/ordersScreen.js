@@ -16,6 +16,10 @@ function getStatusTone(statusId) {
   return "done";
 }
 
+function isAcceptedOrder(statusId) {
+  return statusId === "aceito" || statusId === "preparo" || statusId === "saiu-entrega";
+}
+
 function formatDateTime(value) {
   return new Intl.DateTimeFormat("pt-BR", {
     day: "2-digit",
@@ -62,6 +66,15 @@ export function createOrdersScreen({ elements, onBack, onOpenOrder }) {
       total.textContent = formatCurrency(order.totais?.total || 0);
 
       card.append(status, content, total);
+
+      if (isAcceptedOrder(order.statusId)) {
+        const mascot = document.createElement("span");
+        mascot.className = "order-card__mascot";
+        mascot.setAttribute("aria-hidden", "true");
+        mascot.textContent = "👨‍🍳";
+        card.append(mascot);
+      }
+
       card.addEventListener("click", () => onOpenOrder(order));
       card.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {

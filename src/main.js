@@ -11,6 +11,7 @@ import { createItemSheet } from "./ui/itemSheet.js";
 import { createMenuView } from "./ui/menuView.js";
 import { createOrderConfirmationPopup } from "./ui/orderConfirmationPopup.js";
 import { createOrderDetailPopup } from "./ui/orderDetailPopup.js";
+import { createOrderSuccessPopup } from "./ui/orderSuccessPopup.js";
 import { createOrdersScreen } from "./ui/ordersScreen.js";
 import { createPaymentSheet } from "./ui/paymentSheet.js";
 import { createPromoBanner } from "./ui/promoBanner.js";
@@ -102,6 +103,11 @@ const elements = {
     title: document.querySelector("#order-detail-title"),
     content: document.querySelector("#order-detail-content"),
     closeButton: document.querySelector("#order-detail-close")
+  },
+  orderSuccess: {
+    backdrop: document.querySelector("#order-success-backdrop"),
+    message: document.querySelector("#order-success-message"),
+    closeButton: document.querySelector("#order-success-close")
   }
 };
 
@@ -313,7 +319,7 @@ const orderConfirmationPopup = createOrderConfirmationPopup({
     cartDrawer.close();
     paymentSheet.close();
     bottomNavigation.setActive("home");
-    toast.show(`Pedido confirmado: ${savedOrder.itens.length} item(ns).`);
+    orderSuccessPopup.open(savedOrder);
   }
 });
 
@@ -344,6 +350,14 @@ const ordersScreen = createOrdersScreen({
   },
   onOpenOrder(order) {
     orderDetailPopup.open(order);
+  }
+});
+
+const orderSuccessPopup = createOrderSuccessPopup({
+  elements: elements.orderSuccess,
+  onClose() {
+    bottomNavigation.setActive("orders");
+    ordersScreen.open(getAllOrders());
   }
 });
 
