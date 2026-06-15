@@ -22,7 +22,8 @@ export function createItemSheet({ elements, getCategoryName, getProducts, pricin
       return null;
     }
 
-    return getPizzaOptions().find((product) => product.id === elements.secondFlavor.value) || null;
+    const selectedSecondFlavor = elements.secondFlavor.querySelector("input[name='second-flavor']:checked");
+    return getPizzaOptions().find((product) => product.id === selectedSecondFlavor?.value) || null;
   }
 
   function getSelectedDoubleIngredients() {
@@ -93,11 +94,17 @@ export function createItemSheet({ elements, getCategoryName, getProducts, pricin
     const options = getPizzaOptions().filter((product) => product.id !== selectedProduct.id);
     elements.secondFlavor.replaceChildren();
 
-    options.forEach((product) => {
-      const option = document.createElement("option");
-      option.value = product.id;
-      option.textContent = product.nome;
-      elements.secondFlavor.append(option);
+    options.forEach((product, index) => {
+      const label = document.createElement("label");
+      label.className = "second-flavor-option";
+      label.innerHTML = `
+        <input type="radio" name="second-flavor" value="${product.id}" ${index === 0 ? "checked" : ""} />
+        <span>
+          <strong>${product.nome}</strong>
+          <small>${getCategoryName(product.categoriaId)}</small>
+        </span>
+      `;
+      elements.secondFlavor.append(label);
     });
 
     elements.halfAndHalfGroup.hidden = !selectedProduct.permiteMeioAMeio || options.length === 0;
