@@ -36,8 +36,14 @@ Publique a raiz do repositorio. Os caminhos foram definidos de forma relativa (`
 
 ## Preparacao para ADM
 
-A tela ADM ainda nao foi criada, mas a base esta separada para receber:
+A tela ADM e a base de dados estao separadas para receber:
 
+- Acesso pelo perfil digitando `admpizzaria2026dev` no campo nome e salvando.
+- Colunas de pedidos pendentes, aceitos e finalizados.
+- Aceite/recusa/cancelamento/saida para entrega com mensagens de WhatsApp.
+- Popup customizado de confirmacao de pagamento para finalizar pedido.
+- Controle financeiro por dia, semana, mes e periodo.
+- Contato manual com cliente via WhatsApp.
 - Cadastro/edicao/remocao de produtos e categorias.
 - Controle do banner principal pelo array `banner`.
 - Alteracao de taxa, tempo de entrega e configuracoes gerais em `configuracoes`.
