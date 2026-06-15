@@ -189,6 +189,10 @@
         </header>
 
         <div id="cart-empty" class="cart-empty">
+          <div class="pizza-mascot pizza-mascot--empty" aria-hidden="true">
+            <span class="pizza-mascot__chef"></span>
+            <span class="pizza-mascot__oven"></span>
+          </div>
           <strong>Seu carrinho esta vazio.</strong>
           <span>Volte ao cardapio e adicione seus sabores favoritos.</span>
         </div>
@@ -401,6 +405,28 @@
             Confirmar pedido
           </button>
         </div>
+      </section>
+    </div>
+
+    <div id="order-success-backdrop" class="confirmation-backdrop" hidden>
+      <section
+        class="confirmation-popup order-success-popup"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="order-success-title"
+      >
+        <div class="pizza-mascot pizza-mascot--success" aria-hidden="true">
+          <span class="pizza-mascot__chef"></span>
+          <span class="pizza-mascot__oven"></span>
+          <span class="pizza-mascot__steam pizza-mascot__steam--one"></span>
+          <span class="pizza-mascot__steam pizza-mascot__steam--two"></span>
+        </div>
+        <p class="confirmation-popup__eyebrow">Pedido enviado</p>
+        <h2 id="order-success-title">A pizzaria ja recebeu!</h2>
+        <p id="order-success-message" class="confirmation-popup__text">
+          Seu pedido foi enviado e esta aguardando a pizzaria aceitar.
+        </p>
+        <button id="order-success-close" class="button button--full" type="button">Ver pedidos</button>
       </section>
     </div>
 
