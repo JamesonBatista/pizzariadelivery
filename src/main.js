@@ -94,7 +94,6 @@ const elements = {
   ordersScreen: {
     backdrop: document.querySelector("#orders-screen-backdrop"),
     backButton: document.querySelector("#orders-back"),
-    tabs: [...document.querySelectorAll(".order-tab")],
     empty: document.querySelector("#orders-empty"),
     list: document.querySelector("#orders-list")
   },
@@ -190,6 +189,36 @@ function getAllOrders() {
   return [...ordersById.values()];
 }
 
+function parseOrderNumber(orderNumber) {
+  const value = String(orderNumber || "");
+  if (/^\d+$/.test(value)) {
+    return Number(value);
+  }
+
+  const alphaMatch = value.match(/^A(\d{3})$/);
+  if (alphaMatch) {
+    return 999 + Number(alphaMatch[1]);
+  }
+
+  return 0;
+}
+
+function formatOrderNumber(sequence) {
+  if (sequence <= 999) {
+    return String(sequence);
+  }
+
+  return `A${String(sequence - 999).padStart(3, "0")}`;
+}
+
+function getNextOrderNumber() {
+  const highestSequence = getAllOrders().reduce(
+    (highest, order) => Math.max(highest, parseOrderNumber(order.numeroPedido)),
+    0
+  );
+  return formatOrderNumber(highestSequence + 1);
+}
+
 function openOrderConfirmation(payment) {
   const customer = customerStorage.getCustomer();
 
@@ -211,6 +240,7 @@ function openOrderConfirmation(payment) {
 function createConfirmedOrder(order) {
   const customer = customerStorage.getCustomer();
   return customerStorage.saveOrder({
+    numeroPedido: getNextOrderNumber(),
     clienteId: customer.id,
     cliente: customer,
     statusId: "recebido",

@@ -519,6 +519,7 @@
   "pedidos": [
     {
       "id": "pedido-aguardando-demo",
+      "numeroPedido": "1",
       "tipo": "pedido",
       "clienteId": "cliente-demo",
       "cliente": {
@@ -554,6 +555,7 @@
     },
     {
       "id": "pedido-aceito-demo",
+      "numeroPedido": "2",
       "tipo": "pedido",
       "clienteId": "cliente-demo",
       "cliente": {
@@ -591,6 +593,7 @@
     },
     {
       "id": "pedido-concluido-demo",
+      "numeroPedido": "3",
       "tipo": "pedido",
       "clienteId": "cliente-demo",
       "cliente": {

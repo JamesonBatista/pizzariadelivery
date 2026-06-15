@@ -1,15 +1,7 @@
 import { formatCurrency } from "../utils/formatters.js";
 
-const closedStatuses = new Set(["entregue", "cancelado"]);
-
 function parseDate(value) {
   return value ? new Date(value) : new Date(0);
-}
-
-function isToday(value) {
-  const date = parseDate(value);
-  const now = new Date();
-  return date.toDateString() === now.toDateString();
 }
 
 function getStatusTone(statusId) {
@@ -35,21 +27,15 @@ function formatDateTime(value) {
 
 export function createOrdersScreen({ elements, onBack, onOpenOrder }) {
   let allOrders = [];
-  let activeFilter = "today";
   let lastFocusedElement = null;
 
-  function filterOrders() {
-    return allOrders
-      .filter((order) => {
-        const closed = closedStatuses.has(order.statusId);
-        return activeFilter === "today" ? isToday(order.criadoEm) && !closed : closed || !isToday(order.criadoEm);
-      })
-      .sort((a, b) => parseDate(b.criadoEm) - parseDate(a.criadoEm));
+  function sortOrders() {
+    return [...allOrders].sort((a, b) => parseDate(b.criadoEm) - parseDate(a.criadoEm));
   }
 
   function render(orders = allOrders) {
     allOrders = orders;
-    const filteredOrders = filterOrders();
+    const filteredOrders = sortOrders();
     elements.list.replaceChildren();
     elements.empty.hidden = filteredOrders.length > 0;
 
@@ -59,16 +45,16 @@ export function createOrdersScreen({ elements, onBack, onOpenOrder }) {
       card.className = "order-card";
       card.tabIndex = 0;
       card.setAttribute("role", "button");
-      card.setAttribute("aria-label", `Abrir pedido ${order.id}`);
+      card.setAttribute("aria-label", `Abrir pedido ${order.numeroPedido || order.id}`);
 
       const status = document.createElement("span");
       status.className = `order-card__status order-card__status--${getStatusTone(order.statusId)}`;
 
       const content = document.createElement("div");
       const title = document.createElement("strong");
-      title.textContent = order.statusNome || "Pedido";
+      title.textContent = `Pedido ${order.numeroPedido || order.id}`;
       const meta = document.createElement("small");
-      meta.textContent = `${formatDateTime(order.criadoEm)} • ${order.itens?.length || 0} item(ns)`;
+      meta.textContent = `${order.statusNome || "Pedido"} • ${formatDateTime(order.criadoEm)} • ${order.itens?.length || 0} item(ns)`;
       content.append(title, meta);
 
       const total = document.createElement("strong");
@@ -107,16 +93,6 @@ export function createOrdersScreen({ elements, onBack, onOpenOrder }) {
   elements.backButton.addEventListener("click", () => {
     close();
     onBack();
-  });
-
-  elements.tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      activeFilter = tab.dataset.filter;
-      elements.tabs.forEach((currentTab) => {
-        currentTab.classList.toggle("is-active", currentTab === tab);
-      });
-      render();
-    });
   });
 
   return {

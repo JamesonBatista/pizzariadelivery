@@ -914,7 +914,7 @@ img {
 }
 
 .orders-screen {
-  grid-template-rows: auto auto auto 1fr;
+  grid-template-rows: auto auto 1fr;
   gap: 14px;
 }
 
@@ -1130,30 +1130,6 @@ img {
   gap: 14px;
 }
 
-.order-tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  padding: 6px;
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: 0 10px 24px rgba(89, 35, 21, 0.08);
-}
-
-.order-tab {
-  min-height: 42px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--color-muted);
-  font-weight: 900;
-}
-
-.order-tab.is-active {
-  background: var(--color-brand);
-  color: #fff;
-}
-
 .orders-list {
   display: grid;
   align-content: start;
@@ -1201,6 +1177,7 @@ img {
 
 .order-card__status--accepted {
   background: #22c55e;
+  animation: statusPulseAccepted 1s ease-in-out infinite;
 }
 
 .order-card__status--done {
@@ -1792,6 +1769,21 @@ img {
     box-shadow:
       0 0 0 5px rgba(255, 255, 255, 0.82),
       0 0 0 8px rgba(245, 158, 11, 0);
+  }
+}
+
+@keyframes statusPulseAccepted {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 5px rgba(255, 255, 255, 0.82),
+      0 0 0 0 rgba(34, 197, 94, 0.58);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(255, 255, 255, 0.82),
+      0 0 0 8px rgba(34, 197, 94, 0);
   }
 }
 
