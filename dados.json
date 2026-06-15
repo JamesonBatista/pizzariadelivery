@@ -511,6 +511,7 @@
     {
       "id": "cliente-demo",
       "nomeCompleto": "Cliente Demonstração",
+      "telefone": "87999999999",
       "bairro": "Centro",
       "endereco": "Rua das Pizzas, 123",
       "pontoReferencia": "Proximo a praca principal"
@@ -524,6 +525,7 @@
       "clienteId": "cliente-demo",
       "cliente": {
         "nomeCompleto": "Cliente Demonstração",
+        "telefone": "87999999999",
         "bairro": "Centro",
         "endereco": "Rua das Pizzas, 123",
         "pontoReferencia": "Proximo a praca principal"
@@ -560,6 +562,7 @@
       "clienteId": "cliente-demo",
       "cliente": {
         "nomeCompleto": "Cliente Demonstração",
+        "telefone": "87999999999",
         "bairro": "Centro",
         "endereco": "Rua das Pizzas, 123",
         "pontoReferencia": "Proximo a praca principal"
@@ -598,6 +601,7 @@
       "clienteId": "cliente-demo",
       "cliente": {
         "nomeCompleto": "Cliente Demonstração",
+        "telefone": "87999999999",
         "bairro": "Centro",
         "endereco": "Rua das Pizzas, 123",
         "pontoReferencia": "Proximo a praca principal"

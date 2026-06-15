@@ -246,10 +246,22 @@
           </div>
         </div>
 
-        <form id="user-profile-form" class="profile-form">
+        <form id="user-profile-form" class="profile-form" novalidate>
           <label class="form-field" for="customer-name">
             Nome completo
             <input id="customer-name" name="nomeCompleto" autocomplete="name" required />
+          </label>
+
+          <label class="form-field" for="customer-phone">
+            Numero de WhatsApp
+            <input
+              id="customer-phone"
+              name="telefone"
+              inputmode="tel"
+              autocomplete="tel"
+              placeholder="87999999999"
+              required
+            />
           </label>
 
           <label class="form-field" for="customer-neighborhood">
@@ -427,6 +439,20 @@
           Seu pedido foi enviado e esta aguardando a pizzaria aceitar.
         </p>
         <button id="order-success-close" class="button button--full" type="button">Ver pedidos</button>
+      </section>
+    </div>
+
+    <div id="admin-panel-backdrop" class="admin-backdrop" hidden>
+      <section class="admin-panel" role="dialog" aria-modal="true" aria-labelledby="admin-title">
+        <header class="admin-header">
+          <div>
+            <p class="admin-header__eyebrow">Painel administrativo</p>
+            <h2 id="admin-title">ADM Pizzaria</h2>
+          </div>
+          <button id="admin-close" class="screen-back" type="button">Sair</button>
+        </header>
+
+        <div id="admin-content" class="admin-content"></div>
       </section>
     </div>
 

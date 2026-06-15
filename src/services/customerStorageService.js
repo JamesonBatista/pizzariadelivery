@@ -44,10 +44,31 @@ export function createCustomerStorageService() {
     return normalizedOrder;
   }
 
+  function updateOrder(orderId, updates) {
+    const orders = getOrders();
+    let updatedOrder = null;
+    const updatedOrders = orders.map((order) => {
+      if (order.id !== orderId) {
+        return order;
+      }
+
+      updatedOrder = {
+        ...order,
+        ...updates,
+        atualizadoEm: new Date().toISOString()
+      };
+      return updatedOrder;
+    });
+
+    writeJson(ORDERS_KEY, updatedOrders);
+    return updatedOrder;
+  }
+
   return {
     getCustomer,
     saveCustomer,
     getOrders,
-    saveOrder
+    saveOrder,
+    updateOrder
   };
 }

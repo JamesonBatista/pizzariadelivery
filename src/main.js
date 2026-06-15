@@ -4,6 +4,7 @@ import { createDatabaseService } from "./services/databaseService.js";
 import { createCustomerStorageService } from "./services/customerStorageService.js";
 import { calculateCartTotals } from "./services/pricingService.js";
 import { registerPwaServiceWorker } from "./services/pwaService.js";
+import { createAdminPanel } from "./ui/adminPanel.js";
 import { createBottomNavigation } from "./ui/bottomNavigation.js";
 import { createCartDrawer } from "./ui/cartDrawer.js";
 import { createCartSummary } from "./ui/cartSummary.js";
@@ -88,6 +89,7 @@ const elements = {
     backButton: document.querySelector("#user-profile-back"),
     form: document.querySelector("#user-profile-form"),
     name: document.querySelector("#customer-name"),
+    phone: document.querySelector("#customer-phone"),
     neighborhood: document.querySelector("#customer-neighborhood"),
     address: document.querySelector("#customer-address"),
     reference: document.querySelector("#customer-reference")
@@ -108,6 +110,11 @@ const elements = {
     backdrop: document.querySelector("#order-success-backdrop"),
     message: document.querySelector("#order-success-message"),
     closeButton: document.querySelector("#order-success-close")
+  },
+  adminPanel: {
+    backdrop: document.querySelector("#admin-panel-backdrop"),
+    content: document.querySelector("#admin-content"),
+    closeButton: document.querySelector("#admin-close")
   }
 };
 
@@ -193,6 +200,44 @@ function getAllOrders() {
       ordersById.set(order.id, order);
     });
   return [...ordersById.values()];
+}
+
+function getAllCustomers() {
+  const customersById = new Map();
+  const storedCustomer = customerStorage.getCustomer();
+  if (storedCustomer) {
+    customersById.set(storedCustomer.id, storedCustomer);
+  }
+  state.pedidos.forEach((order) => {
+    if (order.cliente) {
+      customersById.set(order.clienteId || order.cliente.id || order.cliente.nomeCompleto, order.cliente);
+    }
+  });
+  customerStorage.getOrders().forEach((order) => {
+    if (order.cliente) {
+      customersById.set(order.clienteId || order.cliente.id || order.cliente.nomeCompleto, order.cliente);
+    }
+  });
+  return [...customersById.values()];
+}
+
+function updateOrderEverywhere(orderId, updates) {
+  const localOrder = customerStorage.updateOrder(orderId, updates);
+  let updatedStateOrder = null;
+  state.pedidos = state.pedidos.map((order) => {
+    if (order.id !== orderId) {
+      return order;
+    }
+    updatedStateOrder = {
+      ...order,
+      ...updates,
+      atualizadoEm: new Date().toISOString()
+    };
+    return updatedStateOrder;
+  });
+  const updatedOrder = localOrder || updatedStateOrder;
+  ordersScreen.render(getAllOrders());
+  return updatedOrder || getAllOrders().find((order) => order.id === orderId);
 }
 
 function parseOrderNumber(orderNumber) {
@@ -336,6 +381,12 @@ const userProfileScreen = createUserProfileScreen({
       state.pendingPayment = null;
       openOrderConfirmation(payment);
     }
+  },
+  onAdminAccess() {
+    cartDrawer.close();
+    ordersScreen.close();
+    bottomNavigation.setActive("home");
+    adminPanel.open();
   }
 });
 
@@ -358,6 +409,16 @@ const orderSuccessPopup = createOrderSuccessPopup({
   onClose() {
     bottomNavigation.setActive("orders");
     ordersScreen.open(getAllOrders());
+  }
+});
+
+const adminPanel = createAdminPanel({
+  elements: elements.adminPanel,
+  getOrders: getAllOrders,
+  getCustomers: getAllCustomers,
+  updateOrder: updateOrderEverywhere,
+  onClose() {
+    bottomNavigation.setActive("home");
   }
 });
 

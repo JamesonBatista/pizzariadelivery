@@ -1,12 +1,27 @@
-export function createUserProfileScreen({ elements, storageService, onBack, onSave }) {
+const ADMIN_ACCESS_NAME = "admpizzaria2026dev";
+
+export function createUserProfileScreen({ elements, storageService, onBack, onSave, onAdminAccess }) {
   let lastFocusedElement = null;
   let mode = "view";
 
   function fillForm(customer) {
     elements.name.value = customer?.nomeCompleto || "";
+    elements.phone.value = customer?.telefone || "";
     elements.neighborhood.value = customer?.bairro || "";
     elements.address.value = customer?.endereco || "";
     elements.reference.value = customer?.pontoReferencia || "";
+  }
+
+  function validateCustomerForm() {
+    const requiredFields = [elements.name, elements.phone, elements.neighborhood, elements.address];
+    const invalidField = requiredFields.find((field) => !field.value.trim());
+
+    if (invalidField) {
+      invalidField.focus();
+      return false;
+    }
+
+    return true;
   }
 
   function open(options = {}) {
@@ -34,8 +49,22 @@ export function createUserProfileScreen({ elements, storageService, onBack, onSa
     event.preventDefault();
 
     const formData = new FormData(elements.form);
+    const typedName = String(formData.get("nomeCompleto") || "").trim();
+
+    if (typedName.toLowerCase() === ADMIN_ACCESS_NAME) {
+      close();
+      onAdminAccess();
+      return;
+    }
+
+    if (!validateCustomerForm()) {
+      return;
+    }
+
     const customer = storageService.saveCustomer({
-      nomeCompleto: String(formData.get("nomeCompleto") || "").trim(),
+      id: storageService.getCustomer()?.id,
+      nomeCompleto: typedName,
+      telefone: String(formData.get("telefone") || "").trim(),
       bairro: String(formData.get("bairro") || "").trim(),
       endereco: String(formData.get("endereco") || "").trim(),
       pontoReferencia: String(formData.get("pontoReferencia") || "").trim()

@@ -22,6 +22,7 @@ const STATIC_ASSETS = [
   "./src/services/pricingService.js",
   "./src/services/pwaService.js",
   "./src/services/whatsappService.js",
+  "./src/ui/adminPanel.js",
   "./src/ui/bottomNavigation.js",
   "./src/ui/cartDrawer.js",
   "./src/ui/cartSummary.js",
