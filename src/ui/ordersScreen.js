@@ -16,6 +16,18 @@ function getStatusTone(statusId) {
   return "done";
 }
 
+function getCardTitle(statusId) {
+  if (statusId === "recebido") {
+    return "Aguardando aceite";
+  }
+
+  if (statusId === "aceito" || statusId === "preparo" || statusId === "saiu-entrega") {
+    return "Aceito";
+  }
+
+  return "Finalizado";
+}
+
 function isAcceptedOrder(statusId) {
   return statusId === "aceito" || statusId === "preparo" || statusId === "saiu-entrega";
 }
@@ -56,9 +68,9 @@ export function createOrdersScreen({ elements, onBack, onOpenOrder }) {
 
       const content = document.createElement("div");
       const title = document.createElement("strong");
-      title.textContent = `Pedido ${order.numeroPedido || order.id}`;
+      title.textContent = getCardTitle(order.statusId);
       const meta = document.createElement("small");
-      meta.textContent = `${order.statusNome || "Pedido"} • ${formatDateTime(order.criadoEm)} • ${order.itens?.length || 0} item(ns)`;
+      meta.textContent = `Pedido ${order.numeroPedido || order.id} • ${formatDateTime(order.criadoEm)} • ${order.itens?.length || 0} item(ns)`;
       content.append(title, meta);
 
       const total = document.createElement("strong");
