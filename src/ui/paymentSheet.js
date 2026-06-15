@@ -8,7 +8,7 @@ export function createPaymentSheet({ elements, onSubmit }) {
   function syncCashField() {
     const isCash = getSelectedMethod() === "dinheiro";
     elements.cashChangeField.hidden = !isCash;
-    elements.cashChange.required = isCash;
+    elements.cashChange.required = false;
 
     if (!isCash) {
       elements.cashChange.value = "";

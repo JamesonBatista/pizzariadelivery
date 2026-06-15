@@ -8,19 +8,39 @@ const paymentLabels = {
 
 function formatPayment(payment = {}) {
   const label = paymentLabels[payment.metodo] || payment.metodo || "Nao informado";
-  return payment.metodo === "dinheiro" ? `${label} - troco para ${formatCurrency(payment.trocoPara || 0)}` : label;
+  return payment.metodo === "dinheiro" && payment.trocoPara
+    ? `${label} - troco para ${formatCurrency(payment.trocoPara)}`
+    : label;
+}
+
+function formatFullDateTime(value) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    weekday: "long",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(value ? new Date(value) : new Date());
 }
 
 export function createOrderDetailPopup({ elements }) {
   let lastFocusedElement = null;
 
   function render(order) {
-    elements.title.textContent = order.statusNome || "Pedido";
+    elements.title.textContent = `Pedido ${order.numeroPedido || order.id}`;
     elements.content.replaceChildren();
 
     const customer = order.cliente || {};
     const sections = [
-      ["Pedido", [`Codigo: ${order.id}`, `Status: ${order.statusNome || order.statusId}`]],
+      [
+        "Pedido",
+        [
+          `Numero: ${order.numeroPedido || order.id}`,
+          `Data e hora: ${formatFullDateTime(order.criadoEm)}`,
+          `Status: ${order.statusNome || order.statusId}`
+        ]
+      ],
       [
         "Cliente",
         [
