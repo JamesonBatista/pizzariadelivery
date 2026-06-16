@@ -2,6 +2,15 @@ import { formatCurrency } from "../utils/formatters.js";
 
 const DEFAULT_PHONE = "87999999999";
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function normalizePhone(phone) {
   const digits = String(phone || DEFAULT_PHONE).replace(/\D/g, "");
   return digits || DEFAULT_PHONE;
@@ -41,8 +50,16 @@ function acceptedMessage(order) {
   return `🍕 Olá, ${order.cliente?.nomeCompleto || "cliente"}!\n\n✅ Seu pedido ${order.numeroPedido || order.id} foi ACEITO pela pizzaria e já está sendo preparado.\n\n🕒 Pedido aberto em: ${formatDateTime(order.criadoEm)}\n\n${orderItemsText(order)}\n\n💰 Total: ${formatCurrency(orderTotal(order))}\n\nObrigado por pedir com a gente! 👨‍🍳🔥`;
 }
 
-function deliveryMessage(order) {
-  return `🛵🍕 Olá, ${order.cliente?.nomeCompleto || "cliente"}!\n\nSeu pedido ${order.numeroPedido || order.id} saiu para entrega.\n\n📍 Entrega: ${order.cliente?.endereco || ""} - ${order.cliente?.bairro || ""}\n📌 Referência: ${order.cliente?.pontoReferencia || "não informada"}\n\n💰 Total: ${formatCurrency(orderTotal(order))}\n\nPrepare a mesa, sua pizza está chegando! 🔥`;
+function customerFirstName(order) {
+  return String(order.cliente?.nomeCompleto || "cliente").trim().split(/\s+/)[0] || "cliente";
+}
+
+function deliveryMessage(order, { includePaymentReminder = false } = {}) {
+  const paymentText = includePaymentReminder
+    ? `\n\n💰 Valor do pedido: ${formatCurrency(orderTotal(order))}\n_eita ${customerFirstName(order)} não esquece de mim quando a pizza chegar kkk_`
+    : "";
+
+  return `🛵🍕 Olá, ${order.cliente?.nomeCompleto || "cliente"}!\n\nSeu pedido ${order.numeroPedido || order.id} saiu para entrega.\n\n📍 Entrega: ${order.cliente?.endereco || ""} - ${order.cliente?.bairro || ""}\n📌 Referência: ${order.cliente?.pontoReferencia || "não informada"}${paymentText}\n\nPrepare a mesa, sua pizza está chegando! 🔥`;
 }
 
 function cancelMessage(order) {
@@ -91,7 +108,19 @@ function buildOrderLine(order) {
 }
 
 export function createAdminPanel({ elements, getOrders, getCustomers, updateOrder, onClose }) {
-  let selectedPeriod = "day";
+  let activeColumn = "pending";
+  let selectedStartDate = formatDateInput(new Date());
+  let selectedEndDate = formatDateInput(new Date());
+
+  function formatDateInput(date) {
+    return date.toISOString().slice(0, 10);
+  }
+
+  function isWithinDateRange(date, startDate, endDate) {
+    const start = new Date(`${startDate}T00:00:00`);
+    const end = new Date(`${endDate}T23:59:59`);
+    return date >= start && date <= end;
+  }
 
   function showAdminPopup({ title, message, confirmText = "Confirmar", cancelText = "Cancelar", onConfirm }) {
     const backdrop = document.createElement("div");
@@ -125,28 +154,30 @@ export function createAdminPanel({ elements, getOrders, getCustomers, updateOrde
   function showPaymentPopup(order) {
     showAdminPopup({
       title: "O pedido foi pago?",
-      message: "Confirme se o pagamento já foi recebido antes de finalizar o pedido.",
+      message: "Confirme antes de enviar a mensagem de entrega. Se não foi pago, o cliente receberá o valor do pedido.",
       confirmText: "Sim, foi pago",
       cancelText: "Nao foi pago",
       onConfirm() {
-        updateOrder(order.id, {
+        const updatedOrder = updateOrder(order.id, {
           statusId: "entregue",
           statusNome: "Finalizado",
           pago: true,
           fechadoEm: new Date().toISOString()
-        });
+        }) || order;
+        openWhatsapp(customerPhone(updatedOrder), deliveryMessage(updatedOrder, { includePaymentReminder: false }));
         render();
       }
     });
 
     const popup = document.querySelector(".admin-popup-backdrop:last-child");
     popup.querySelector("[data-action='cancel']").addEventListener("click", () => {
-      updateOrder(order.id, {
+      const updatedOrder = updateOrder(order.id, {
         statusId: "aceito",
         statusNome: "Aceito",
         pago: false,
         pagamentoPendente: true
-      });
+      }) || order;
+      openWhatsapp(customerPhone(updatedOrder), deliveryMessage(updatedOrder, { includePaymentReminder: true }));
       render();
     }, { once: true });
   }
@@ -184,7 +215,6 @@ export function createAdminPanel({ elements, getOrders, getCustomers, updateOrde
       statusNome: "Saiu para entrega",
       saiuEntregaEm: new Date().toISOString()
     }) || order;
-    openWhatsapp(customerPhone(updatedOrder), deliveryMessage(updatedOrder));
     showPaymentPopup(updatedOrder);
   }
 
@@ -223,27 +253,53 @@ export function createAdminPanel({ elements, getOrders, getCustomers, updateOrde
   }
 
   function printOrder(order) {
-    const printWindow = window.open("", "_blank", "noopener,noreferrer");
+    const printWindow = window.open("", "_blank");
     if (!printWindow) {
       return;
     }
 
     printWindow.document.write(`
-      <html>
-        <head><title>Pedido ${order.numeroPedido || order.id}</title></head>
+      <!doctype html>
+      <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8" />
+          <title>Pedido ${escapeHtml(order.numeroPedido || order.id)}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 24px; color: #211816; }
+            h1 { margin: 0 0 12px; font-size: 28px; }
+            h2 { margin-top: 18px; color: #8e1b1b; }
+            section { margin: 14px 0; padding: 12px; border: 1px solid #ddd; border-radius: 10px; }
+            p { margin: 6px 0; }
+            ul { padding-left: 18px; }
+            li { margin: 6px 0; }
+            .total { font-size: 24px; font-weight: 800; }
+            @media print { button { display: none; } }
+          </style>
+        </head>
         <body>
-          <h1>Pedido ${order.numeroPedido || order.id}</h1>
-          <p><strong>Status:</strong> ${order.statusNome}</p>
-          <p><strong>Cliente:</strong> ${order.cliente?.nomeCompleto || ""}</p>
-          <p><strong>Telefone:</strong> ${customerPhone(order)}</p>
-          <p><strong>Endereco:</strong> ${order.cliente?.endereco || ""} - ${order.cliente?.bairro || ""}</p>
-          <pre>${orderItemsText(order)}</pre>
-          <h2>Total: ${formatCurrency(orderTotal(order))}</h2>
+          <h1>Pedido ${escapeHtml(order.numeroPedido || order.id)}</h1>
+          <section>
+            <p><strong>Status:</strong> ${escapeHtml(order.statusNome || "")}</p>
+            <p><strong>Aberto em:</strong> ${escapeHtml(formatDateTime(order.criadoEm))}</p>
+            <p><strong>Cliente:</strong> ${escapeHtml(order.cliente?.nomeCompleto || "")}</p>
+            <p><strong>Telefone:</strong> ${escapeHtml(customerPhone(order))}</p>
+            <p><strong>Endereço:</strong> ${escapeHtml(order.cliente?.endereco || "")} - ${escapeHtml(order.cliente?.bairro || "")}</p>
+            <p><strong>Referência:</strong> ${escapeHtml(order.cliente?.pontoReferencia || "Não informada")}</p>
+          </section>
+          <section>
+            <h2>Itens</h2>
+            <ul>
+              ${(order.itens || []).map((item) => `<li>${escapeHtml(`${item.quantidade}x ${item.produtoNome}`)} - <strong>${escapeHtml(formatCurrency(item.total || item.precoUnitario * item.quantidade || 0))}</strong></li>`).join("")}
+            </ul>
+          </section>
+          <p class="total">Total: ${escapeHtml(formatCurrency(orderTotal(order)))}</p>
+          <button onclick="window.print()">Imprimir</button>
         </body>
       </html>
     `);
     printWindow.document.close();
-    printWindow.print();
+    printWindow.focus();
+    window.setTimeout(() => printWindow.print(), 250);
   }
 
   function createOrderCard(order) {
@@ -318,27 +374,46 @@ export function createAdminPanel({ elements, getOrders, getCustomers, updateOrde
     const finished = orders.filter((order) => statusColumn(order) === "finished");
 
     const columns = [
-      ["Pendentes", pending, true],
-      ["Aceito", accepted, false],
-      ["Finalizado", finished, false]
+      ["pending", "Pendentes", pending, true],
+      ["accepted", "Aceito", accepted, false],
+      ["finished", "Finalizado", finished, false]
     ];
 
     const board = document.createElement("div");
     board.className = "admin-board";
-    columns.forEach(([title, columnOrders, showCounter]) => {
-      const column = document.createElement("section");
-      column.className = "admin-column";
-      column.innerHTML = `
-        <header>
-          <h3>${title}${showCounter ? ` <span>${columnOrders.length}</span>` : ""}</h3>
-        </header>
-      `;
 
-      const list = document.createElement("div");
-      list.className = "admin-column__list";
-      columnOrders.forEach((order) => list.append(createOrderCard(order)));
-      column.append(list);
-      board.append(column);
+    const tabs = document.createElement("div");
+    tabs.className = "admin-status-tabs";
+    columns.forEach(([id, title, columnOrders, showCounter]) => {
+      const tab = document.createElement("button");
+      tab.type = "button";
+      tab.className = `admin-status-tab ${id === activeColumn ? "is-active" : ""}`;
+      tab.dataset.column = id;
+      tab.innerHTML = `${title}${showCounter ? ` <span>${columnOrders.length}</span>` : ""}`;
+      tabs.append(tab);
+    });
+
+    const selectedColumn = columns.find(([id]) => id === activeColumn) || columns[0];
+    const [, title, columnOrders, showCounter] = selectedColumn;
+    const column = document.createElement("section");
+    column.className = "admin-column";
+    column.innerHTML = `
+      <header>
+        <h3>${title}${showCounter ? ` <span>${columnOrders.length}</span>` : ""}</h3>
+      </header>
+    `;
+
+    const list = document.createElement("div");
+    list.className = "admin-column__list";
+    columnOrders.forEach((order) => list.append(createOrderCard(order)));
+    column.append(list);
+    board.append(tabs, column);
+
+    tabs.addEventListener("click", (event) => {
+      const columnId = event.target?.closest("button")?.dataset?.column;
+      if (!columnId) return;
+      activeColumn = columnId;
+      render();
     });
 
     return board;
@@ -347,13 +422,9 @@ export function createAdminPanel({ elements, getOrders, getCustomers, updateOrde
   function renderFinance() {
     const orders = getOrders().filter(isPaidOrder);
     const now = new Date();
-    const selectedOrders = orders.filter((order) => {
-      const date = new Date(order.fechadoEm || order.criadoEm);
-      if (selectedPeriod === "day") return sameDay(date, now);
-      if (selectedPeriod === "week") return sameWeek(date, now);
-      if (selectedPeriod === "month") return sameMonth(date, now);
-      return true;
-    });
+    const selectedOrders = orders.filter((order) =>
+      isWithinDateRange(new Date(order.fechadoEm || order.criadoEm), selectedStartDate, selectedEndDate)
+    );
 
     elements.content.innerHTML = `
       <div class="admin-toolbar">
@@ -369,22 +440,26 @@ export function createAdminPanel({ elements, getOrders, getCustomers, updateOrde
         <article><span>Semana</span><strong>${formatCurrency(totalsFor(orders, (order) => sameWeek(new Date(order.fechadoEm || order.criadoEm), now)))}</strong></article>
         <article><span>Mes</span><strong>${formatCurrency(totalsFor(orders, (order) => sameMonth(new Date(order.fechadoEm || order.criadoEm), now)))}</strong></article>
       </div>
-      <label class="form-field">
-        Periodo
-        <select id="finance-period">
-          <option value="day">Hoje</option>
-          <option value="week">Semana</option>
-          <option value="month">Mes</option>
-          <option value="all">Todos</option>
-        </select>
-      </label>
+      <div class="finance-period-grid">
+        <label class="form-field">
+          Data inicial
+          <input id="finance-start-date" type="date" value="${selectedStartDate}" />
+        </label>
+        <label class="form-field">
+          Data final
+          <input id="finance-end-date" type="date" value="${selectedEndDate}" />
+        </label>
+      </div>
       <div class="finance-orders">
         ${selectedOrders.map((order) => `<div><span>${buildOrderLine(order)}</span><strong>${order.pagamento?.metodo || ""}</strong></div>`).join("")}
       </div>
     `;
-    elements.content.querySelector("#finance-period").value = selectedPeriod;
-    elements.content.querySelector("#finance-period").addEventListener("change", (event) => {
-      selectedPeriod = event.target.value;
+    elements.content.querySelector("#finance-start-date").addEventListener("change", (event) => {
+      selectedStartDate = event.target.value || selectedStartDate;
+      renderFinance();
+    });
+    elements.content.querySelector("#finance-end-date").addEventListener("change", (event) => {
+      selectedEndDate = event.target.value || selectedEndDate;
       renderFinance();
     });
     elements.content.querySelector("[data-admin-view='board']").addEventListener("click", render);
