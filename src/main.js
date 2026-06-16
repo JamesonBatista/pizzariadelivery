@@ -78,6 +78,7 @@ const elements = {
     backdrop: document.querySelector("#order-confirmation-backdrop"),
     items: document.querySelector("#order-confirmation-items"),
     payment: document.querySelector("#order-confirmation-payment"),
+    warning: document.querySelector("#order-confirmation-warning"),
     subtotal: document.querySelector("#order-confirmation-subtotal"),
     delivery: document.querySelector("#order-confirmation-delivery"),
     total: document.querySelector("#order-confirmation-total"),
@@ -432,9 +433,17 @@ const adminPanel = createAdminPanel({
   getOrders: getAllOrders,
   getCustomers: getAllCustomers,
   getCategories: () => state.categorias,
+  getProducts: () => state.produtos,
   onCreateProduct(product) {
     const savedProduct = customerStorage.saveProduct(product);
     state.produtos = [savedProduct, ...state.produtos.filter((item) => item.id !== savedProduct.id)];
+    menuView.renderProducts(filtrarProdutos());
+  },
+  onToggleProductAvailability(productId, available) {
+    customerStorage.setProductAvailability(productId, available);
+    state.produtos = state.produtos.map((product) =>
+      product.id === productId ? { ...product, disponivel: available } : product
+    );
     menuView.renderProducts(filtrarProdutos());
   },
   updateOrder: updateOrderEverywhere,
@@ -561,7 +570,10 @@ async function startApp() {
 
     state.banners = banners;
     state.categorias = categorias;
-    state.produtos = [...customerStorage.getProducts(), ...produtos];
+    const availability = customerStorage.getProductAvailability();
+    state.produtos = [...customerStorage.getProducts(), ...produtos].map((product) =>
+      Object.hasOwn(availability, product.id) ? { ...product, disponivel: availability[product.id] } : product
+    );
     state.pedidos = pedidos;
     renderApp();
   } catch (error) {

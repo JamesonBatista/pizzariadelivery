@@ -1,6 +1,7 @@
 const CUSTOMER_KEY = "pizzaria.customer";
 const ORDERS_KEY = "pizzaria.orders";
 const PRODUCTS_KEY = "pizzaria.admin.products";
+const PRODUCT_AVAILABILITY_KEY = "pizzaria.admin.productAvailability";
 
 function readJson(key, fallback) {
   try {
@@ -60,6 +61,19 @@ export function createCustomerStorageService() {
     return normalizedProduct;
   }
 
+  function getProductAvailability() {
+    return readJson(PRODUCT_AVAILABILITY_KEY, {});
+  }
+
+  function setProductAvailability(productId, available) {
+    const availability = {
+      ...getProductAvailability(),
+      [productId]: available
+    };
+    writeJson(PRODUCT_AVAILABILITY_KEY, availability);
+    return availability;
+  }
+
   function updateOrder(orderId, updates) {
     const orders = getOrders();
     let updatedOrder = null;
@@ -87,6 +101,8 @@ export function createCustomerStorageService() {
     saveOrder,
     getProducts,
     saveProduct,
+    getProductAvailability,
+    setProductAvailability,
     updateOrder
   };
 }

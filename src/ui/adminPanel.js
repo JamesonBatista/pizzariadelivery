@@ -75,6 +75,20 @@ const UNPAID_REMINDERS = [
   "eita {nome}, se a pizza chegar antes do pagamento ela fica ciumenta kkk",
   "{nome}, deixa o valor separado que a pizza vai chegar brilhando kkk"
 ];
+const CANCEL_REASONS = {
+  feriado: {
+    label: "Feriado",
+    message: "Hoje estamos com atendimento especial por causa do feriado e não vamos conseguir seguir com sua solicitação agora. Te esperamos no próximo pedido com uma pizza caprichada! 🍕"
+  },
+  semIngredientes: {
+    label: "Sem ingredientes",
+    message: "Queríamos muito preparar sua pizza, mas um dos ingredientes acabou por aqui. Chama a pizzaria que a gente te ajuda a escolher outra delícia! 🍕"
+  },
+  fechado: {
+    label: "Fechado",
+    message: "No momento a pizzaria já encerrou o atendimento. Assim que abrirmos, vai ser um prazer preparar sua pizza! 🍕"
+  }
+};
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -151,7 +165,7 @@ function customerPhone(order) {
 }
 
 function acceptedMessage(order) {
-  return `🍕 Olá, ${order.cliente?.nomeCompleto || "cliente"}!\n\n✅ A pizzaria aceitou sua solicitação e já está preparando tudo com carinho.\n\n🕒 Aberto em: ${formatDateTime(order.criadoEm)}\n\n${orderItemsText(order)}${cashChangeText(order)}\n\nObrigado por pedir com a gente! 👨‍🍳🔥`;
+  return `🍕 Olá, ${order.cliente?.nomeCompleto || "cliente"}!\n\n✅ A pizzaria aceitou sua solicitação e já está preparando tudo com carinho.\n\n🕒 Aberto em: ${formatDateTime(order.criadoEm)}\n\n${orderItemsText(order)}\n\nSubtotal: ${formatCurrency(order.totais?.subtotal || 0)}\nEntrega: ${formatCurrency(order.totais?.deliveryFee || 0)}\n*Total: ${formatCurrency(orderTotal(order))}*${cashChangeText(order)}\n\nObrigado por pedir com a gente! 👨‍🍳🔥`;
 }
 
 function customerFirstName(order) {
@@ -163,12 +177,14 @@ function deliveryMessage(order, { includePaymentReminder = false } = {}) {
     ? `\n\n💰 Valor: ${formatCurrency(orderTotal(order))}\n_${randomUnpaidReminder(order)}_`
     : "";
   const readyText = randomDeliveryReadyMessage();
+  const referenceText = order.cliente?.pontoReferencia ? `\n📌 Referência: ${order.cliente.pontoReferencia}` : "";
 
-  return `🛵🍕 Olá, ${order.cliente?.nomeCompleto || "cliente"}!\n\nSua pizza saiu para entrega.\n\n📍 Entrega: ${order.cliente?.endereco || ""} - ${order.cliente?.bairro || ""}\n📌 Referência: ${order.cliente?.pontoReferencia || "não informada"}${paymentText}\n\n${readyText}`;
+  return `🛵🍕 Olá, ${order.cliente?.nomeCompleto || "cliente"}!\n\nSua pizza saiu para entrega.\n\n📍 Entrega: ${order.cliente?.endereco || ""} - ${order.cliente?.bairro || ""}${referenceText}${paymentText}\n\n${readyText}`;
 }
 
-function cancelMessage(order) {
-  return `🍕 Olá, ${order.cliente?.nomeCompleto || "cliente"}!\n\nPassando para avisar com carinho que não vamos conseguir seguir com essa solicitação agora.\n\nSe quiser, chama a pizzaria por aqui que a gente te ajuda a escolher outra opção deliciosa. ❤️`;
+function cancelMessage(order, reasonId = "fechado") {
+  const reason = CANCEL_REASONS[reasonId] || CANCEL_REASONS.fechado;
+  return `🍕 Olá, ${order.cliente?.nomeCompleto || "cliente"}!\n\n${reason.message}\n\nObrigado pela compreensão ❤️`;
 }
 
 function contactMessage(customer, text) {
@@ -242,7 +258,9 @@ export function createAdminPanel({
   getOrders,
   getCustomers,
   getCategories,
+  getProducts,
   onCreateProduct,
+  onToggleProductAvailability,
   updateOrder,
   onClose
 }) {
@@ -289,6 +307,37 @@ export function createAdminPanel({
     document.body.append(backdrop);
   }
 
+  function showCancelReasonPopup(order, onConfirm) {
+    const backdrop = document.createElement("div");
+    backdrop.className = "admin-popup-backdrop";
+    backdrop.innerHTML = `
+      <section class="admin-popup" role="dialog" aria-modal="true">
+        <p class="admin-header__eyebrow">Cancelamento</p>
+        <h3>Qual motivo?</h3>
+        <label class="form-field">
+          Motivo
+          <select id="cancel-reason">
+            ${Object.entries(CANCEL_REASONS).map(([id, reason]) => `<option value="${id}">${reason.label}</option>`).join("")}
+          </select>
+        </label>
+        <div class="admin-popup__actions">
+          <button class="button button--ghost" type="button" data-action="cancel">Voltar</button>
+          <button class="button" type="button" data-action="confirm">Enviar motivo</button>
+        </div>
+      </section>
+    `;
+    backdrop.addEventListener("click", (event) => {
+      const action = event.target?.dataset?.action;
+      if (event.target === backdrop || action === "cancel") backdrop.remove();
+      if (action === "confirm") {
+        const reasonId = backdrop.querySelector("#cancel-reason").value;
+        backdrop.remove();
+        onConfirm(reasonId);
+      }
+    });
+    document.body.append(backdrop);
+  }
+
   function showPaymentPopup(order) {
     showAdminPopup({
       title: "O pedido foi pago?",
@@ -331,19 +380,15 @@ export function createAdminPanel({
   }
 
   function refuseOrder(order) {
-    showAdminPopup({
-      title: "Recusar pedido?",
-      message: "O pedido será cancelado e sairá da coluna de pendentes.",
-      confirmText: "Recusar",
-      onConfirm() {
-        const updatedOrder = updateOrder(order.id, {
-          statusId: "cancelado",
-          statusNome: "Cancelado",
-          fechadoEm: new Date().toISOString()
-        });
-        openWhatsapp(customerPhone(updatedOrder || order), cancelMessage(updatedOrder || order));
-        render();
-      }
+    showCancelReasonPopup(order, (reasonId) => {
+      const updatedOrder = updateOrder(order.id, {
+        statusId: "cancelado",
+        statusNome: "Cancelado",
+        motivoCancelamento: CANCEL_REASONS[reasonId]?.label,
+        fechadoEm: new Date().toISOString()
+      });
+      openWhatsapp(customerPhone(updatedOrder || order), cancelMessage(updatedOrder || order, reasonId));
+      render();
     });
   }
 
@@ -357,19 +402,15 @@ export function createAdminPanel({
   }
 
   function cancelAccepted(order) {
-    showAdminPopup({
-      title: "Cancelar pedido?",
-      message: "O cliente receberá uma mensagem de cancelamento pelo WhatsApp.",
-      confirmText: "Cancelar pedido",
-      onConfirm() {
-        const updatedOrder = updateOrder(order.id, {
-          statusId: "cancelado",
-          statusNome: "Cancelado",
-          fechadoEm: new Date().toISOString()
-        });
-        openWhatsapp(customerPhone(updatedOrder || order), cancelMessage(updatedOrder || order));
-        render();
-      }
+    showCancelReasonPopup(order, (reasonId) => {
+      const updatedOrder = updateOrder(order.id, {
+        statusId: "cancelado",
+        statusNome: "Cancelado",
+        motivoCancelamento: CANCEL_REASONS[reasonId]?.label,
+        fechadoEm: new Date().toISOString()
+      });
+      openWhatsapp(customerPhone(updatedOrder || order), cancelMessage(updatedOrder || order, reasonId));
+      render();
     });
   }
 
@@ -697,6 +738,7 @@ export function createAdminPanel({
 
   function renderProductForm() {
     const categories = getCategories();
+    const products = getProducts();
     elements.content.innerHTML = `
       <div class="admin-toolbar">
         <button class="screen-back" type="button" data-admin-view="board">Voltar</button>
@@ -708,12 +750,15 @@ export function createAdminPanel({
           <p>Campos preparados conforme o JSON atual: categoria, produto, tamanhos, meio a meio e ingredientes em dobro.</p>
         </div>
         <form id="admin-product-form" class="admin-product-form">
-          <label class="form-field">
-            Categoria
-            <select name="categoriaId" required>
-              ${categories.map((category) => `<option value="${category.id}">${category.nome}</option>`).join("")}
-            </select>
-          </label>
+          <fieldset class="admin-category-picker">
+            <legend>Categoria</legend>
+            ${categories.map((category, index) => `
+              <label>
+                <input type="radio" name="categoriaId" value="${category.id}" ${index === 0 ? "checked" : ""} />
+                <span>${category.nome}</span>
+              </label>
+            `).join("")}
+          </fieldset>
           <label class="form-field">
             Nome
             <input name="nome" required placeholder="Pizza moda da casa" />
@@ -759,6 +804,18 @@ export function createAdminPanel({
           </label>
           <button class="button button--full" type="submit">Salvar produto</button>
         </form>
+        <section class="admin-availability">
+          <p class="admin-header__eyebrow">Disponibilidade</p>
+          <h3>Produtos do cardapio</h3>
+          <div>
+            ${products.map((product) => `
+              <label>
+                <span>${product.nome}</span>
+                <input type="checkbox" data-product-id="${product.id}" ${product.disponivel !== false ? "checked" : ""} />
+              </label>
+            `).join("")}
+          </div>
+        </section>
       </section>
     `;
 
@@ -788,6 +845,11 @@ export function createAdminPanel({
         message: "O produto foi adicionado ao cardapio local e ja aparece para o cliente.",
         confirmText: "Voltar ao painel",
         onConfirm: render
+      });
+    });
+    elements.content.querySelectorAll("[data-product-id]").forEach((input) => {
+      input.addEventListener("change", () => {
+        onToggleProductAvailability(input.dataset.productId, input.checked);
       });
     });
   }

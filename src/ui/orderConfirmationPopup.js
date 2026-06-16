@@ -61,6 +61,38 @@ export function createOrderConfirmationPopup({ elements, onCancel, onConfirm }) 
     return label;
   }
 
+  function cashChangeAmount(order) {
+    if (order.payment?.metodo !== "dinheiro") return 0;
+    const total = Number(order.totals?.total || 0);
+    const paid = Number(order.payment?.trocoPara || 0);
+    if (!Number.isFinite(paid) || !Number.isFinite(total) || paid <= total || paid > 10000) return 0;
+    return paid - total;
+  }
+
+  function hasInvalidCashChange(order) {
+    if (order.payment?.metodo !== "dinheiro" || !order.payment?.trocoPara) return false;
+    return Number(order.payment.trocoPara) < Number(order.totals?.total || 0);
+  }
+
+  function renderValidation(order) {
+    elements.warning.textContent = "";
+    elements.warning.hidden = true;
+    elements.confirmButton.disabled = false;
+
+    if (hasInvalidCashChange(order)) {
+      elements.warning.textContent = `O valor informado para troco (${formatCurrency(order.payment.trocoPara)}) é menor que o total (${formatCurrency(order.totals.total)}). Ajuste para confirmar.`;
+      elements.warning.hidden = false;
+      elements.confirmButton.disabled = true;
+      return;
+    }
+
+    const change = cashChangeAmount(order);
+    if (change > 0) {
+      elements.warning.textContent = `Troco que você deve receber: ${formatCurrency(change)}.`;
+      elements.warning.hidden = false;
+    }
+  }
+
   function open(order) {
     currentOrder = order;
     lastFocusedElement = document.activeElement;
@@ -70,6 +102,7 @@ export function createOrderConfirmationPopup({ elements, onCancel, onConfirm }) 
     elements.subtotal.textContent = formatCurrency(order.totals.subtotal);
     elements.delivery.textContent = formatCurrency(order.totals.deliveryFee);
     elements.total.textContent = formatCurrency(order.totals.total);
+    renderValidation(order);
 
     elements.backdrop.hidden = false;
     elements.confirmButton.focus();
@@ -90,6 +123,7 @@ export function createOrderConfirmationPopup({ elements, onCancel, onConfirm }) 
   });
 
   elements.confirmButton.addEventListener("click", () => {
+    if (elements.confirmButton.disabled) return;
     const order = currentOrder;
     close();
     onConfirm(order);
