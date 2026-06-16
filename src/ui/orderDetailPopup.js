@@ -28,6 +28,29 @@ function isAcceptedOrder(statusId) {
   return statusId === "aceito" || statusId === "preparo" || statusId === "saiu-entrega";
 }
 
+function itemDetails(item) {
+  const details = [];
+  if (item.itensBanner?.length) {
+    details.push(`Combo: ${item.itensBanner.map((bannerItem) => bannerItem.nome).join(" + ")}`);
+  }
+  if (item.tamanho) {
+    details.push(`Tamanho: ${item.tamanho.nome}${item.tamanho.fatias ? ` (${item.tamanho.fatias} fatias)` : ""}`);
+  }
+  if (item.meioAMeio) {
+    details.push(`Montagem: meio a meio${item.segundoSabor?.nome ? ` com ${item.segundoSabor.nome}` : ""}`);
+  }
+  if (item.ingredientesEmDobro?.length) {
+    details.push(`Ingredientes em dobro: ${item.ingredientesEmDobro.map((ingredient) => ingredient.nome).join(", ")}`);
+  }
+  if (item.recheioExtra) {
+    details.push(`Recheio extra: ${formatCurrency(item.valorRecheioExtra || 0)}`);
+  }
+  if (item.observacao) {
+    details.push(`Observação: ${item.observacao}`);
+  }
+  return details;
+}
+
 export function createOrderDetailPopup({ elements }) {
   let lastFocusedElement = null;
 
@@ -92,7 +115,8 @@ export function createOrderDetailPopup({ elements }) {
     (order.itens || []).forEach((item) => {
       const row = document.createElement("div");
       row.className = "order-detail-item";
-      row.innerHTML = `<span>${item.quantidade}x ${item.produtoNome}</span><strong>${formatCurrency(item.total || item.precoUnitario * item.quantidade || 0)}</strong>`;
+      const details = itemDetails(item).map((detail) => `<small>${detail}</small>`).join("");
+      row.innerHTML = `<span>${item.quantidade}x ${item.produtoNome}${details}</span><strong>${formatCurrency(item.total || item.precoUnitario * item.quantidade || 0)}</strong>`;
       itemsList.append(row);
     });
 

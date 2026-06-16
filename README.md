@@ -40,10 +40,12 @@ A tela ADM e a base de dados estao separadas para receber:
 
 - Acesso pelo perfil digitando `admpizzaria2026dev` no campo nome e salvando.
 - Colunas de pedidos pendentes, aceitos e finalizados.
+- Abas de status no painel ADM, com Pendentes como padrao.
 - Aceite/recusa/cancelamento/saida para entrega com mensagens de WhatsApp.
 - Popup customizado de confirmacao de pagamento para finalizar pedido.
-- Controle financeiro por dia, semana, mes e periodo.
+- Controle financeiro por dia, semana, mes e periodo com data inicial/final.
 - Contato manual com cliente via WhatsApp.
+- Cadastro local de produtos pelo ADM, com tamanhos, ingredientes em dobro e meio a meio.
 - Cadastro/edicao/remocao de produtos e categorias.
 - Controle do banner principal pelo array `banner`.
 - Alteracao de taxa, tempo de entrega e configuracoes gerais em `configuracoes`.

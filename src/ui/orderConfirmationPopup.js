@@ -54,8 +54,8 @@ export function createOrderConfirmationPopup({ elements, onCancel, onConfirm }) 
   function formatPayment(payment) {
     const label = paymentLabels[payment.metodo] || payment.metodo;
 
-    if (payment.metodo === "dinheiro") {
-      return `${label} - troco para ${formatCurrency(payment.trocoPara || 0)}`;
+    if (payment.metodo === "dinheiro" && payment.trocoPara) {
+      return `${label} - troco para ${formatCurrency(payment.trocoPara)}`;
     }
 
     return label;
