@@ -69,7 +69,7 @@ function createBannerCard(banner, onOrderBanner) {
   return card;
 }
 
-export function createPromoBanner({ element, onOrderBanner, intervalMs = 6500 }) {
+export function createPromoBanner({ element, onOrderBanner, intervalMs = 2000 }) {
   let intervalId = null;
   let activeIndex = 0;
 

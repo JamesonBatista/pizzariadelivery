@@ -237,7 +237,21 @@ function updateOrderEverywhere(orderId, updates) {
   });
   const updatedOrder = localOrder || updatedStateOrder;
   ordersScreen.render(getAllOrders());
+  updateOrderTheme();
   return updatedOrder || getAllOrders().find((order) => order.id === orderId);
+}
+
+function updateOrderTheme() {
+  const latestOrder = getAllOrders().sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm))[0];
+  document.body.classList.remove("order-theme-waiting", "order-theme-accepted");
+
+  if (!latestOrder) return;
+  if (latestOrder.statusId === "recebido") {
+    document.body.classList.add("order-theme-waiting");
+  }
+  if (latestOrder.statusId === "aceito" || latestOrder.statusId === "preparo") {
+    document.body.classList.add("order-theme-accepted");
+  }
 }
 
 function parseOrderNumber(orderNumber) {
@@ -361,6 +375,7 @@ const orderConfirmationPopup = createOrderConfirmationPopup({
     state.carrinhoItens = [];
     renderCart();
     ordersScreen.render(getAllOrders());
+    updateOrderTheme();
     cartDrawer.close();
     paymentSheet.close();
     bottomNavigation.setActive("home");
@@ -416,6 +431,12 @@ const adminPanel = createAdminPanel({
   elements: elements.adminPanel,
   getOrders: getAllOrders,
   getCustomers: getAllCustomers,
+  getCategories: () => state.categorias,
+  onCreateProduct(product) {
+    const savedProduct = customerStorage.saveProduct(product);
+    state.produtos = [savedProduct, ...state.produtos.filter((item) => item.id !== savedProduct.id)];
+    menuView.renderProducts(filtrarProdutos());
+  },
   updateOrder: updateOrderEverywhere,
   onClose() {
     bottomNavigation.setActive("home");
@@ -522,6 +543,7 @@ function renderApp() {
   menuView.setActiveCategory(state.categoriaAtiva);
   menuView.renderProducts(filtrarProdutos());
   renderCart();
+  updateOrderTheme();
   elements.appShell.hidden = false;
   bottomNavigation.show();
 }
@@ -539,7 +561,7 @@ async function startApp() {
 
     state.banners = banners;
     state.categorias = categorias;
-    state.produtos = produtos;
+    state.produtos = [...customerStorage.getProducts(), ...produtos];
     state.pedidos = pedidos;
     renderApp();
   } catch (error) {
